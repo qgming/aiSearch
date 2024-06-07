@@ -36,7 +36,7 @@ export default {
       APIKEY: localStorage.getItem("apiKey"),
       APIWEB: localStorage.getItem("apiWebsite"),
       MODEL: localStorage.getItem('apiModel'),
-
+      PROMPT: '../prompt/developer.txt',
     };
   },
   methods: {
@@ -102,9 +102,12 @@ export default {
     //读取本地Prompt
     async readPromptFile() {
       try {
-        const response = await axios.get('../prompt/search.txt', {
+        const response = await axios.get(this.PROMPT, {
           responseType: 'text' // 指定响应类型为文本
         });
+        // const response = await axios.get('../prompt/search.txt', {
+        //   responseType: 'text' // 指定响应类型为文本
+        // });
         return response.data;
       } catch (error) {
         console.error('prompt读取失败！:', error);

@@ -17,7 +17,7 @@ export default {
   data() {
     return {
       searchText: '',
-      url: 'https://www.bing.com/search?q=',
+      url: '',
       // url: localStorage.getItem('searchUrl'),
     };
   },
@@ -43,7 +43,11 @@ export default {
         window.open(`/ai?q=${encodeURIComponent(this.searchText)}`, '_blank');
       }
     },
-  }
+  },
+  mounted() {
+    this.url = localStorage.getItem("searchEngine") || 'https://www.bing.com/search?q=';
+
+  },
 };
 </script>
 
@@ -106,9 +110,9 @@ export default {
 }
 
 @media screen and (max-width: 768px) {
-  body {
+  /* body {
     background-image: url("https://bing.ee123.net/img/?w=768x1280");
-  }
+  } */
 
   .searchInput {
     width: 350px;
