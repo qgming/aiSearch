@@ -84,6 +84,8 @@ export default {
       //把历史纪录转化为对话数组
       this.sendChat = this.chatMessages.length > 6 ? [this.chatMessages[0]].concat(this.chatMessages.slice(-5)) : [...this.chatMessages];
       this.inputText = '';
+      console.log(this.chatMessages);
+      console.log(this.sendChat);
 
       try {
         const responseMessage = await this.sendMessageToAi();
