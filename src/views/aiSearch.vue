@@ -99,7 +99,7 @@ export default {
     //读取本地Prompt
     async readPromptFile() {
       try {
-        const response = await axios.get('../public/prompt/search.txt', {
+        const response = await axios.get('../prompt/search.txt', {
           responseType: 'text' // 指定响应类型为文本
         });
         return response.data;
