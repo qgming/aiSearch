@@ -21,11 +21,11 @@ const routes = [
   },
   {
     path: "/ai",
-    name: "AI搜索",
+    name: "aiSearch",
     component: aiSearch,
   },
   {
-    path: "/anyai",
+    path: "/any",
     name: "AI",
     component: ai,
   },

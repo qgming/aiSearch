@@ -108,7 +108,16 @@ export default {
     },
     //刷新页面
     refreshPage() {
-      window.location.reload();
+      this.messages = [];
+      this.chatMessages = [];
+      this.sendChat = [];
+      //发送prompt
+      this.readPromptFile().then(prompt => {
+        this.chatMessages.push({ role: 'system', content: prompt });
+        this.sendChat = this.chatMessages.length > 6 ? [this.chatMessages[0]].concat(this.chatMessages.slice(-5)) : [...this.chatMessages];
+        this.sendMessageToAi();
+      });
+      // window.location.reload();
     },
     //修改高度
     setChatBoxHeight() {
