@@ -43,7 +43,7 @@ export default {
       apiKey: '',
       apiWebsite: '',
       apiModel: 'gpt-3.5-turbo',
-      savedBack: false,
+      savedBack: ture,
       selectedEngine: ref(null),// 添加到 data 函数中
       options: [
         { name: 'Google', url: 'https://www.google.com/search?q=' },
@@ -96,7 +96,7 @@ export default {
       this.selectedEngine = searchEngine
     } else {
       // 如果没有保存的值，则默认选中第一个搜索引擎
-      this.selectedEngine = this.options[0];
+      this.selectedEngine = this.options[4];
     }
 
     console.log(this.selectedEngine);
