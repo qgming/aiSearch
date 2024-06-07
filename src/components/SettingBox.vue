@@ -20,7 +20,7 @@
           <div class="optionName">API模型</div><input v-model="apiModel" type="text" placeholder="gpt-3.5-turbo">
         </ol>
         <ol>
-          <div class="optionName">Polar Dimension 0.0.2</div>
+          <div class="optionName">Polar Dimension 0.0.3</div>
         </ol>
         <ol><button class="saveButton" v-on:click="saveButtonApi">保存</button></ol>
       </li>
