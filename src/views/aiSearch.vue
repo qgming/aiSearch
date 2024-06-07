@@ -102,6 +102,7 @@ export default {
     //读取本地Prompt
     async readPromptFile() {
       try {
+        //根据变量变化初始提示词
         const response = await axios.get(this.PROMPT, {
           responseType: 'text' // 指定响应类型为文本
         });
