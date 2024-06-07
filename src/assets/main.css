@@ -1,0 +1,171 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f9;
+  background-image: url("https://bing.ee123.net/img/");
+}
+
+/* 搜索框 */
+/* 
+.search {
+  margin-top: 250px;
+}
+
+.searchBox {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  background-color: white;
+  padding: 10px;
+  border: 1px solid black;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.searchBox:hover {
+  border: 1px solid black;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+#searchText {
+  width: 600px;
+  height: 40px;
+  border: 0px;
+  font-size: 16px;
+  background: none;
+  outline: none;
+  color: black;
+}
+
+.searchOption {
+  display: flex;
+  flex-direction: row-reverse;
+  padding: 1px;
+}
+
+.aSearch {
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  margin-left: 10px;
+  border: 1px solid #f5f6f7;
+  background-color: #f1f2f3;
+  border-radius: 9px;
+}
+
+.aSearch:hover {
+  background-color: #f9f9f9;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.aSearch img {
+  width: 20px;
+  height: 20px;
+  margin: 5px 0px 5px 5px;
+}
+
+.aSearch span {
+  margin: 5px;
+} */
+
+
+/* 设置区域 */
+/* .setting {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  left: 10px;
+  top: 10px;
+  background-color: white;
+  border-radius: 12px;
+  padding: 3px;
+  border: 1px solid black;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+#settingImg {
+  margin: 3px;
+  width: 30px;
+  height: 30px;
+}
+
+#settingBox {
+  display: none;
+  border-radius: 12px;
+}
+
+ol {
+  padding: 5px;
+  /* border: 1px solid black; */
+  /* background-color: #f9f9f9; */
+  /* margin: 3px;
+  border-radius: 6px;
+}
+.optionName {
+  font-size:14px;
+  font-weight: 400;
+  margin-bottom: 5px;
+}
+
+ol input {
+  height: 30px;
+  width: 300px;
+  padding: 2px;
+  border-radius: 6px;
+  border: 1px solid #f5f6f7;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+#saveButton {
+  height: 38px;
+  width: 308px;
+  border: 1px solid #f5f6f7;
+  background-color: #f1f2f3;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+#saveButton:hover {
+  background-color: #f9f9f9;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+} */ */
+
+/* 版权信息 */
+.footer {
+  position: absolute;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #f9f9f9;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.developer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.apiTxt {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
+  body {
+    background-image: url("https://bing.ee123.net/img/?w=768x1280");
+  }
+
+}
