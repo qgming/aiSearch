@@ -8,12 +8,15 @@
           <div v-html="parsedContent(message.content)"></div>
         </div>
       </div>
+      <div v-if="waiting" class="thinkAi"><img class="loading" src="../assets/icons/loading.gif" alt=""></div>
     </div>
+
     <div class="inputBox">
       <img class="refreshWeb" src="../assets/icons/shuaxin.svg" alt="刷新网站" @click="refreshPage">
       <input class="textInput" type="text" v-model="inputText" @keyup.enter="sendMessage" placeholder="输入问题...">
       <button class="sendButton" @click="sendMessage">发送</button>
     </div>
+    <div class="footerText">内容由 AI 大模型生成，请仔细甄别</div>
   </div>
 </template>
 
@@ -124,7 +127,7 @@ export default {
     //修改高度
     setChatBoxHeight() {
       let screenHeight = window.innerHeight;
-      this.$refs.chatBox.style.height = `${screenHeight - 160}px`;
+      this.$refs.chatBox.style.height = `${screenHeight - 130}px`;
     },
     //让消息支持markdown
     parsedContent(content) {
@@ -168,23 +171,29 @@ export default {
   flex-direction: column;
   justify-content: center;
   margin: 20px;
-  width: 622px;
   border: 1px solid #ccc;
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 20px 20px 5px 20px;
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
 .chatBox {
   overflow-y: scroll;
-  padding-bottom: 20px;
-  height: auto;
+  /* padding-bottom: 20px; */
 }
 
 /* 伪元素隐藏滑动条 */
 .chatBox::-webkit-scrollbar {
   display: none;
+}
+
+.thinkAi {
+  text-align: center;
+}
+
+.loading {
+  width: 50px;
 }
 
 /* 问题输入框 */
@@ -197,14 +206,14 @@ export default {
   border: 1px solid #f1f2f3;
   border-radius: 12px;
   background-color: white;
-  padding: 10px;
+  padding: 6px;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
 .refreshWeb {
-  width: 30px;
-  height: 30px;
-  padding: 5px;
+  width: 26px;
+  height: 26px;
+  padding: 7px;
   border: 1px solid #f5f6f7;
   background-color: #f1f2f3;
   border-radius: 9px;
@@ -217,8 +226,8 @@ export default {
 
 .textInput {
   width: 500px;
-  height: 30px;
-  padding: 5px;
+  height: 40px;
+  padding: 8px;
   border-radius: 9px;
   border: 1px solid #f1f2f3;
   margin: 0px 10px 0px 10px;
@@ -245,6 +254,14 @@ export default {
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
+.footerText {
+  height: 15px;
+  line-height: 15px;
+  text-align: center;
+  color: #c1c2c3;
+  font-size: 12px;
+}
+
 /* 对话内容 */
 
 .message {
@@ -263,8 +280,9 @@ export default {
 
 @media screen and (max-width: 768px) {
   .chatContainer {
-    width: 500px;
-    padding: 10px;
+    width: 370px;
+    padding: 5px;
+    margin: 5px;
   }
 
   .inputBox {
@@ -274,6 +292,12 @@ export default {
 
   .message {
     width: 300px;
+  }
+
+  .footerText {
+    height: 12px;
+    line-height: 12px;
+    font-size: 10px;
   }
 
 }
