@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import aiSearch from "../views/aiSearch.vue";
-import ai from "../views/ai.vue";
+import AiPrompt from "../components/AiPrompt.vue";
+import ai from "../components/Ai.vue";
 import Home from "../components/Home.vue";
 import SearchBox from "../components/SearchBox.vue";
 import SettingBox from "../components/SettingBox.vue";
@@ -15,7 +16,7 @@ const routes = [
     //   showSettingBox: true,
     // },
     children: {
-      component: SearchBox, // 子路由对应的组件
+      component: SearchBox,
       component: SettingBox,
     },
   },
@@ -24,11 +25,15 @@ const routes = [
     name: "aiSearch",
     component: aiSearch,
   },
-  {
-    path: "/any",
-    name: "AI",
-    component: ai,
-  },
+  // {
+  //   path: "/any",
+  //   name: "AI",
+  //   component: Ai,
+  //   children: {
+  //     component: AiPrompt,
+  //     component: SettingBox,
+  //   },
+  // },
 ];
 
 const router = createRouter({

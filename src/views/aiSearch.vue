@@ -13,6 +13,7 @@
 
     <div class="inputBox">
       <img class="refreshWeb" src="../assets/icons/shuaxin.svg" alt="刷新网站" @click="refreshPage">
+      <!-- <el-input class="textInput" v-model="inputText" @keyup.enter="sendMessage" placeholder="输入问题..." /> -->
       <input class="textInput" type="text" v-model="inputText" @keyup.enter="sendMessage" placeholder="输入问题...">
       <button class="sendButton" @click="sendMessage">发送</button>
     </div>
@@ -36,7 +37,8 @@ export default {
       APIKEY: localStorage.getItem("apiKey"),
       APIWEB: localStorage.getItem("apiWebsite"),
       MODEL: localStorage.getItem('apiModel'),
-      PROMPT: '../prompt/developer.txt',
+      PROMPT: '../prompt/search.txt',
+      backColor: localStorage.getItem("backColor") || '#F9F9F9',
     };
   },
   methods: {
@@ -69,14 +71,16 @@ export default {
     //用户发送消息
     async sendMessage() {
       if (this.waiting) {
-        alert('AI正在思考中...');
+        //AI正在思考中
+        this.showAiMessage()
         return;
       }
       this.waiting = true;
 
       let message = this.inputText.trim();
       if (!message) {
-        alert('请先输入问题！');
+        //请输入内容
+        this.showMessage()
         this.waiting = false;
         return;
       }
@@ -126,6 +130,7 @@ export default {
         this.sendChat = this.chatMessages.length > 6 ? [this.chatMessages[0]].concat(this.chatMessages.slice(-5)) : [...this.chatMessages];
         this.sendMessageToAi();
       });
+      this.showRefershMessage()
       // window.location.reload();
     },
     //修改高度
@@ -142,6 +147,25 @@ export default {
       });
       return marked(content);
     },
+    //弹出消息
+    showMessage() {
+      this.$message({
+        message: '请先输入问题！',
+        type: 'warning'
+      });
+    },
+    showAiMessage() {
+      this.$message({
+        message: 'AI正在思考中...',
+        // type: 'warning'
+      });
+    },
+    showRefershMessage() {
+      this.$message({
+        message: '新对话已启用',
+        type: 'success'
+      });
+    },
 
   },
 
@@ -156,6 +180,22 @@ export default {
     this.setChatBoxHeight();
     // 添加窗口大小改变事件监听器
     window.addEventListener('resize', this.setChatBoxHeight);
+    //页面背景
+    const savedBack = localStorage.getItem('switchBack');
+    if (savedBack === null) {
+      document.body.style.backgroundColor = this.backColor;
+    } else {
+      if (savedBack === 'true') {
+        document.body.style.backgroundImage = `url("https://bing.ee123.net/img/")`;
+        document.body.style.backgroundSize = 'cover';
+      } else {
+        document.body.style.backgroundColor = this.backColor;
+      }
+    };
+    if (this.$route.query.q) {
+      this.inputText = this.$route.query.q
+      this.sendMessage()
+    };
 
   },
 
@@ -175,7 +215,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   margin: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #f1f2f3;
   border-radius: 16px;
   padding: 20px 20px 5px 20px;
   background-color: white;
@@ -207,11 +247,11 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
-  border: 1px solid #f1f2f3;
+  border: 1px solid #cccccc;
   border-radius: 12px;
   background-color: white;
   padding: 6px;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  /* box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px; */
 }
 
 .refreshWeb {
@@ -233,12 +273,13 @@ export default {
   height: 40px;
   padding: 8px;
   border-radius: 9px;
-  border: 1px solid #f1f2f3;
+  border: 1px solid #f5f6f7;
   margin: 0px 10px 0px 10px;
   outline: none;
 }
 
 .textInput:hover {
+  border: 1px solid #f9f9f9;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 

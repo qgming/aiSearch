@@ -29,19 +29,24 @@ export default {
     },
     search() {
       if (this.searchText === '') {
-        alert('请输入搜索内容');
+        this.showMessage();
       } else {
-
         window.open(this.url + this.searchText);
       }
     },
     searchAi() {
-      if (this.searchText === '') {
-        alert('请输入搜索内容');
-      } else {
-        // 打开一个新的窗口，并将搜索文本作为查询参数传递
-        window.open(`/ai?q=${encodeURIComponent(this.searchText)}`, '_blank');
-      }
+      // if (this.searchText === '') {
+      //   this.showMessage();
+      // } else {
+      // 打开一个新的窗口，并将搜索文本作为查询参数传递
+      window.open(`/ai?q=${encodeURIComponent(this.searchText)}`, '_blank');
+      // }
+    },
+    showMessage() {
+      this.$message({
+        message: '请先输入内容！',
+        type: 'warning'
+      });
     },
   },
   mounted() {
@@ -59,12 +64,12 @@ export default {
   border-radius: 12px;
   background-color: white;
   padding: 10px;
-  border: 1px solid black;
+  border: 1px solid #f5f6f7;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
 .searchBox:hover {
-  border: 1px solid black;
+  border: 1px solid #f5f6f7;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 

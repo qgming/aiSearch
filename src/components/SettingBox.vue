@@ -5,8 +5,14 @@
       <li>
         <ol>
           <div class="option">
-            <div class="optionText">每日必应壁纸</div>
+            <div class="optionText">必应壁纸</div>
             <el-switch v-model="savedBack" @change="changeBackground" @click="refreshPage" size="large" />
+          </div>
+        </ol>
+        <ol>
+          <div class="option">
+            <div class="optionText">背景颜色</div>
+            <el-color-picker v-model="backColor" />
           </div>
         </ol>
         <ol>
@@ -16,18 +22,23 @@
           </el-select>
         </ol>
         <ol>
-          <div class="optionName">APIKEY</div><input v-model="apiKey" type="text" placeholder="sk-">
+          <div class="optionName">APIKEY</div>
+          <el-input class="selectEngine" v-model="apiKey" placeholder="sk-" />
         </ol>
         <ol>
-          <div class="optionName">API网站</div><input v-model="apiWebsite" type="text" placeholder="https://">
+          <div class="optionName">API网站</div>
+          <el-input class="selectEngine" v-model="apiWebsite" placeholder="https://" />
         </ol>
         <ol>
-          <div class="optionName">API模型</div><input v-model="apiModel" type="text" placeholder="gpt-3.5-turbo">
+          <div class="optionName">API模型</div>
+          <el-input class="selectEngine" v-model="apiModel" placeholder="gpt-3.5-turbo" />
         </ol>
         <ol>
           <div class="optionName">Polar Dimension 0.0.6</div>
         </ol>
-        <ol><el-button class="saveButton" type="primary" v-on:click="saveButtonApi" plain>保存</el-button></ol>
+        <ol><el-button class="saveButton" type="primary" v-on:click="saveButtonApi" @click="showMessage"
+            plain>保存</el-button>
+        </ol>
       </li>
     </div>
   </div>
@@ -44,6 +55,7 @@ export default {
       apiWebsite: '',
       apiModel: 'gpt-3.5-turbo',
       savedBack: false,
+      backColor: '#f9f9f9',
       selectedEngine: ref(null),// 添加到 data 函数中
       options: [
         { name: 'Google', url: 'https://www.google.com/search?q=' },
@@ -67,7 +79,9 @@ export default {
       localStorage.setItem("apiWebsite", this.apiWebsite);
       localStorage.setItem("apiModel", this.apiModel);
       localStorage.setItem("searchEngine", this.selectedEngine);
-      alert("保存成功!");
+      localStorage.setItem("backColor", this.backColor);
+      // this.refreshPage()
+      // alert("保存成功!");
     },
     //切换背景
     changeBackground(value) {
@@ -75,7 +89,7 @@ export default {
         document.body.style.backgroundImage = `url("https://bing.ee123.net/img/")`;
         document.body.style.backgroundSize = 'cover';
       } else {
-        document.body.style.backgroundColor = '#f9f9f9';
+        document.body.style.backgroundColor = this.backColor;
       }
       localStorage.setItem('switchBack', JSON.stringify(value));
       // location.reload();
@@ -84,11 +98,18 @@ export default {
     refreshPage() {
       location.reload();
     },
+    showMessage() {
+      this.$message({
+        message: '保存成功！',
+        type: 'success'
+      });
+    },
   },
   mounted() {
     this.apiKey = localStorage.getItem("apiKey") || '';
     this.apiWebsite = localStorage.getItem("apiWebsite") || '';
     this.apiModel = localStorage.getItem("apiModel") || 'gpt-3.5-turbo';
+    this.backColor = localStorage.getItem("backColor") || '#f9f9f9';
 
     // 从 localStorage 中获取保存的选定的搜索引擎的 URL
     const searchEngine = localStorage.getItem("searchEngine");
@@ -119,7 +140,7 @@ export default {
   background-color: white;
   border-radius: 12px;
   padding: 3px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
@@ -138,12 +159,17 @@ export default {
   justify-content: space-between;
   align-items: center;
   height: 38px;
-  width: 300px;
+  width: 280px;
 }
 
 .selectEngine {
-  width: 300px;
-  border-radius: 6px;
+  width: 280px;
+  /* border-radius: 16px; */
+  height: 30px;
+}
+
+.optionText {
+  font-size: 16px;
 }
 
 ol {
@@ -158,19 +184,9 @@ ol {
   margin-bottom: 5px;
 }
 
-ol input {
-  height: 30px;
-  width: 300px;
-  padding: 2px;
-  border-radius: 6px;
-  border: 1px solid #f5f6f7;
-  background-color: white;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-}
-
 .saveButton {
   height: 38px;
-  width: 300px;
+  width: 280px;
   border-radius: 6px;
   font-size: 18px;
 }
