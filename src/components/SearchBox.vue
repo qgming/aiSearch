@@ -8,6 +8,9 @@
       <div class="aSearch" @click="searchAi">
         <img src="../assets/icons/searchai.svg" alt="大模型搜索"><span>AI搜索</span>
       </div>
+      <div class="aSearch" @click="anyModel">
+        <img src="../assets/icons/searchai.svg" alt="大模型工具"><span>AI工具</span>
+      </div>
     </div>
   </div>
 </template>
@@ -41,6 +44,10 @@ export default {
       // 打开一个新的窗口，并将搜索文本作为查询参数传递
       window.open(`/ai?q=${encodeURIComponent(this.searchText)}`, '_blank');
       // }
+    },
+    //去其他页面（临时
+    anyModel() {
+      window.open(`/any`, '_blank');
     },
     showMessage() {
       this.$message({

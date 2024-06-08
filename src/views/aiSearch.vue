@@ -13,6 +13,7 @@
 
     <div class="inputBox">
       <img class="refreshWeb" src="../assets/icons/shuaxin.svg" alt="刷新网站" @click="refreshPage">
+      <!-- <img class="anyModel" src="../assets/icons/searchai.svg" alt="更多模式" @click="anyModel"> -->
       <!-- <el-input class="textInput" v-model="inputText" @keyup.enter="sendMessage" placeholder="输入问题..." /> -->
       <input class="textInput" type="text" v-model="inputText" @keyup.enter="sendMessage" placeholder="输入问题...">
       <button class="sendButton" @click="sendMessage">发送</button>
@@ -166,7 +167,10 @@ export default {
         type: 'success'
       });
     },
-
+    //去其他页面（临时
+    anyModel() {
+      window.open(`/any`, '_blank');
+    },
   },
 
   mounted() {
@@ -257,7 +261,7 @@ export default {
 .refreshWeb {
   width: 26px;
   height: 26px;
-  padding: 7px;
+  padding: 6px;
   border: 1px solid #f5f6f7;
   background-color: #f1f2f3;
   border-radius: 9px;
@@ -268,13 +272,29 @@ export default {
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
+.anyModel {
+  width: 26px;
+  height: 26px;
+  padding: 6px;
+  margin-left: 5px;
+  border: 1px solid #f5f6f7;
+  background-color: #f1f2f3;
+  border-radius: 9px;
+}
+
+.anyModel:hover {
+  background-color: #f9f9f9;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+
 .textInput {
   width: 500px;
   height: 40px;
   padding: 8px;
   border-radius: 9px;
   border: 1px solid #f5f6f7;
-  margin: 0px 10px 0px 10px;
+  margin: 0px 6px 0px 6px;
   outline: none;
 }
 

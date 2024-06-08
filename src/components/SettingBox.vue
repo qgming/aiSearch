@@ -34,7 +34,7 @@
           <el-input class="selectEngine" v-model="apiModel" placeholder="gpt-3.5-turbo" />
         </ol>
         <ol>
-          <div class="optionName">Polar Dimension 0.0.6</div>
+          <div class="optionName">Polar Dimension 0.0.7</div>
         </ol>
         <ol><el-button class="saveButton" type="primary" v-on:click="saveButtonApi" @click="showMessage"
             plain>保存</el-button>
