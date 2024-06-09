@@ -4,6 +4,10 @@
     <div class="settingBox" v-if="showSettingBox">
       <li>
         <ol>
+          <!-- <van-cell-group>
+            <van-cell title="单元格" value="内容" />
+            <van-cell title="单元格" value="内容" label="描述信息" />
+          </van-cell-group> -->
           <div class="option">
             <div class="optionText">必应壁纸</div>
             <el-switch v-model="savedBack" @change="changeBackground" @click="refreshPage" size="large" />
@@ -34,9 +38,12 @@
           <el-input class="selectEngine" v-model="apiModel" placeholder="gpt-3.5-turbo" />
         </ol>
         <ol>
-          <div class="optionName">Polar Dimension 0.0.7</div>
+          <div class="optionName">Polar Dimension 0.0.8</div>
         </ol>
-        <ol><el-button class="saveButton" type="primary" v-on:click="saveButtonApi" @click="showMessage"
+        <ol>
+          <!-- <van-button class="saveButton" plain type="primary" v-on:click="saveButtonApi"
+            @click="showMessage">保存</van-button> -->
+          <el-button class="saveButton" type="primary" v-on:click="saveButtonApi" @click="showMessage"
             plain>保存</el-button>
         </ol>
       </li>
@@ -86,10 +93,12 @@ export default {
     //切换背景
     changeBackground(value) {
       if (value) {
+        // this.$refs.bgBox.style.backgroundImage = `url("https://bing.ee123.net/img/")`;
         document.body.style.backgroundImage = `url("https://bing.ee123.net/img/")`;
-        document.body.style.backgroundSize = 'cover';
+        // document.body.backgroundSize = 'cover';
+        // document.body.backgroundPosition = 'center';
       } else {
-        document.body.style.backgroundColor = this.backColor;
+        document.body.backgroundColor = this.backColor;
       }
       localStorage.setItem('switchBack', JSON.stringify(value));
       // location.reload();

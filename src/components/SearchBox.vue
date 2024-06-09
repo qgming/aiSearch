@@ -1,18 +1,21 @@
 <template @keyup="enterSearch">
-  <div class="searchBox">
-    <input class="searchInput" v-model="searchText" @keyup="enterSearch" type="text" placeholder="输入你想搜索的问题">
-    <div class="searchOption">
-      <div class="aSearch" @click="search">
-        <img src="../assets/icons/search.svg" alt="普通搜索"><span>搜索</span>
-      </div>
-      <div class="aSearch" @click="searchAi">
-        <img src="../assets/icons/searchai.svg" alt="大模型搜索"><span>AI搜索</span>
-      </div>
-      <div class="aSearch" @click="anyModel">
-        <img src="../assets/icons/searchai.svg" alt="大模型工具"><span>AI工具</span>
+  <transition name="fade">
+    <div class="searchBox" ref="searchBox">
+      <input class="searchInput" v-model="searchText" @keyup="enterSearch" type="text" placeholder="输入你想搜索的问题"
+        ref="searchInput" @focus="isFocused = true">
+      <div class="searchOption" v-show="isFocused">
+        <div class="aSearch" @click="search">
+          <img src="../assets/icons/search.svg" alt="普通搜索"><span>搜索</span>
+        </div>
+        <div class="aSearch" @click="searchAi">
+          <img src="../assets/icons/searchai.svg" alt="大模型搜索"><span>AI搜索</span>
+        </div>
+        <div class="aSearch" @click="anyModel">
+          <img src="../assets/icons/searchai.svg" alt="大模型工具"><span>AI工具</span>
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -21,6 +24,7 @@ export default {
     return {
       searchText: '',
       url: '',
+      isFocused: false,
       // url: localStorage.getItem('searchUrl'),
     };
   },
@@ -55,10 +59,35 @@ export default {
         type: 'warning'
       });
     },
+    handleFocus() {
+      document.body.classList.add('focused');
+    },
+    handleBlur() {
+      document.body.classList.remove('focused');
+    },
+    handleDocumentClick(event) {
+      // 检查点击的目标是否是searchBox内部的元素
+      if (!this.$refs.searchBox.contains(event.target)) {
+        this.isFocused = false;
+      }
+    },
+
   },
   mounted() {
     this.url = localStorage.getItem("searchEngine") || 'https://www.bing.com/search?q=';
 
+    // 添加事件监听器
+    this.$refs.searchInput.addEventListener('focus', this.handleFocus);
+    this.$refs.searchInput.addEventListener('blur', this.handleBlur);
+    // 添加全局点击事件监听器
+    document.addEventListener('click', this.handleDocumentClick);
+
+  },
+  beforeUnmount() {
+    // 在组件卸载时移除事件监听器
+    this.$refs.searchInput.removeEventListener('focus', this.handleFocus);
+    this.$refs.searchInput.removeEventListener('blur', this.handleBlur);
+    document.removeEventListener('click', this.handleDocumentClick);
   },
 };
 </script>
@@ -69,9 +98,10 @@ export default {
   display: flex;
   flex-direction: column;
   border-radius: 12px;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.9);
+  /* backdrop-filter: blur(10px); */
   padding: 10px;
-  border: 1px solid #f5f6f7;
+  border: 1px solid rgba(245, 246, 247, 0.1);
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
@@ -81,7 +111,7 @@ export default {
 }
 
 .searchInput {
-  width: 600px;
+  width: 550px;
   height: 40px;
   border: 0px;
   font-size: 16px;

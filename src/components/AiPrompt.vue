@@ -173,7 +173,7 @@ export default {
     setChatBoxHeight() {
       let screenHeight = window.innerHeight;
       this.$refs.chatBox.style.height = `${screenHeight - 10}px`;
-      this.$refs.aiprompt.style.height = `${screenHeight}px`;
+      this.$refs.aiprompt.style.height = `${screenHeight - 20}px`;
       this.$refs.promptList.style.height = `${screenHeight - 200}px`;
     },
     //让消息支持markdown

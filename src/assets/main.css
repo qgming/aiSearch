@@ -8,8 +8,17 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-size: cover;
+  background-position: center;
+  /* transition: background-size 1.3s ease, filter 0.3s ease; */
   /* background-color: #f9f9f9;
   background-image: url("https://bing.ee123.net/img/"); */
+}
+
+body.focused {
+  background-size: 110%; 
+  backdrop-filter: blur(10px);
+  transition: backdrop-filter 0.2s ease;
 }
 
 /* 
