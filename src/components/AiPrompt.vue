@@ -80,27 +80,96 @@ export default {
     // 发送消息给AI
     async sendMessageToAi() {
       try {
-        const response = await axios.post(this.APIWEB, {
-          model: this.MODEL,
-          messages: this.sendChat
-          // messages: [{ role: 'user', content: message }],
-        }, {
+        // 发送请求到 ChatGPT API
+        const response = await fetch(this.APIWEB, {
+          method: 'POST',
           headers: {
-            'Authorization': `Bearer ${this.APIKEY}`,
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.APIKEY}` // 使用 Bearer 认证方式，APIKEY 是你的 OpenAI API 密钥
           },
+          body: JSON.stringify({
+            model: this.MODEL, // 使用的模型，例如 'gpt-3.5-turbo'
+            stream: true, // 启用流式响应
+            messages: this.sendChat // 发送的消息数组
+          })
         });
-        return response.data.choices[0].message;
+
+        // 检查响应状态是否成功
+        if (!response.ok) {
+          throw new Error(`HTTP 错误! 状态码: ${response.status}`);
+        }
+
+        // 创建一个读取器来读取响应流
+        const reader = response.body.getReader();
+        // 创建一个解码器来将二进制数据解码为字符串
+        let decoder = new TextDecoder();
+        // 存储解码后的数据
+        let resultData = '';
+        // 标志，用于在找到 [DONE] 后停止读取
+        let doneReading = false;
+
+        // 持续读取响应流直到结束
+        while (!doneReading) {
+          // 读取响应流的下一块数据
+          const { done, value } = await reader.read();
+          // 如果已经读取完毕，则退出循环
+          if (done) break;
+          // 将读取到的数据解码并追加到 resultData 中
+          resultData += decoder.decode(value);
+          // 检查 resultData 中是否包含完整的 JSON 消息
+          while (resultData.includes('\n')) {
+            // 找到 JSON 消息的结束位置
+            const messageIndex = resultData.indexOf('\n');
+            // 提取完整的 JSON 消息
+            const message = resultData.slice(0, messageIndex);
+            // 更新 resultData 以移除已处理的消息
+            resultData = resultData.slice(messageIndex + 1);
+            // 检查消息是否以 'data: ' 开头
+            if (message.startsWith('data: ')) {
+              // 解析 JSON 消息
+              const jsonMessage = JSON.parse(message.substring(5));
+              // console.log(jsonMessage);
+              // 检查是否接收到结束消息
+              if (resultData.includes('[DONE]')) {
+                doneReading = true; // 设置标志为 true 以停止读取
+                break;
+              }
+              // 处理接收到的消息
+              const content = jsonMessage.choices[0]?.delta?.content || '';
+              // console.log(content);
+              // return content; // 返回接收到的消息内容
+              this.handleReceivedMessage({ content });
+            }
+          }
+        }
       } catch (error) {
+        // 处理错误
         console.error('消息发送失败:', error);
         throw error;
       }
     },
     //处理消息,接收的消息传入对话纪录数组
     handleReceivedMessage(message) {
-      this.messages.push({ role: '极点AI', content: message.content });
-      this.chatMessages.push({ role: 'assistant', content: message.content });
+      // console.log(message);
+      // 检查最后一个消息的角色
+      if (this.messages.length > 0) {
+        if (this.messages[this.messages.length - 1].role === '极点AI') {
+          // 如果最后一条消息是AI的，则将新消息追加到现有消息中
+          this.messages[this.messages.length - 1].content += message.content;
+        } else {
+          // 否则，创建一个新的消息
+          this.messages.push({ role: '极点AI', content: message.content });
+        }
+      }
 
+      // 将消息同时添加到chatMessages中
+      if (this.chatMessages.length > 0 && this.chatMessages[this.chatMessages.length - 1].role === 'assistant') {
+        // 如果最后一条消息是assistant的，则将新消息追加到现有消息中
+        this.chatMessages[this.chatMessages.length - 1].content += message.content;
+      } else {
+        // 否则，创建一个新的消息
+        this.chatMessages.push({ role: 'assistant', content: message.content });
+      }
     },
 
     //用户发送消息
@@ -126,12 +195,9 @@ export default {
       //把历史纪录转化为对话数组
       this.sendChat = this.chatMessages.length > 6 ? [this.chatMessages[0]].concat(this.chatMessages.slice(-5)) : [...this.chatMessages];
       this.inputText = '';
-      console.log(this.chatMessages);
-      console.log(this.sendChat);
 
       try {
-        const responseMessage = await this.sendMessageToAi();
-        this.handleReceivedMessage(responseMessage);
+        await this.sendMessageToAi();
       } catch (error) {
         console.error('消息发送失败！:', error);
       } finally {

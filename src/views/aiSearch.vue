@@ -140,7 +140,7 @@ export default {
 
     //处理消息,接收的消息传入对话纪录数组
     handleReceivedMessage(message) {
-      console.log(message);
+      // console.log(message);
       // 检查最后一个消息的角色
       if (this.messages.length > 0) {
         if (this.messages[this.messages.length - 1].role === '极点AI') {
@@ -186,8 +186,8 @@ export default {
       this.sendChat = this.chatMessages.length > 6 ? [this.chatMessages[0]].concat(this.chatMessages.slice(-5)) : [...this.chatMessages];
       this.inputText = '';
 
-      console.log('历史记录');
-      console.log(this.chatMessages);
+      // console.log('历史记录');
+      // console.log(this.chatMessages);
 
       try {
 
