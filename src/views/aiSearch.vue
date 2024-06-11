@@ -191,8 +191,8 @@ export default {
       this.sendChat = this.chatMessages.length > 6 ? [this.chatMessages[0]].concat(this.chatMessages.slice(-5)) : [...this.chatMessages];
       this.inputText = '';
 
-      console.log('历史记录');
-      console.log(this.chatMessages);
+      // console.log('历史记录');
+      // console.log(this.chatMessages);
 
       try {
 

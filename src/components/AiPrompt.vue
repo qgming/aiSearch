@@ -56,7 +56,6 @@ export default {
         { name: 'AI画图提示词生成器', any: '描述图片详情，AI帮你补充详细信息', location: '../prompt/midjourney.txt' },
         { name: 'Nature风格润色', any: '将按照 Nature 风格润色，或者可以提供想要模仿的写作风格。', location: '../prompt/nature.txt' },
         { name: '论文专家', any: '根据主题撰写内容翔实、有信服力的论文。', location: '../prompt/lunwen1.txt' },
-
         { name: '英语翻译/修改', any: '将其他语言翻译成英文，或改进你提供的英文句子。', location: '../prompt/english.txt' },
         { name: 'IT编程问题', any: '模拟编程社区来回答你的问题，并提供解决代码。', location: '../prompt/bianchengwenti.txt' },
         { name: '总结内容', any: '将文本内容总结为 100 字。', location: '../prompt/zongjie.txt' },
