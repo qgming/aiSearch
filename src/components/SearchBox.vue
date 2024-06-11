@@ -46,7 +46,8 @@ export default {
       //   this.showMessage();
       // } else {
       // 打开一个新的窗口，并将搜索文本作为查询参数传递
-      window.open(`/ai?q=${encodeURIComponent(this.searchText)}`, '_blank');
+      // window.open(`/ai?q=${encodeURIComponent(this.searchText)}`, '_blank');
+      window.open(`/ai`, '_blank');
       // }
     },
     //去其他页面（临时
@@ -131,8 +132,8 @@ export default {
   align-items: center;
   padding: 2px;
   margin-left: 10px;
-  border: 1px solid #f5f6f7;
-  background-color: #f1f2f3;
+  border: 1px solid #d9d9d9;
+  background-color: #d1d1d1;
   border-radius: 9px;
 }
 

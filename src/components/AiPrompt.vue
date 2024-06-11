@@ -77,9 +77,10 @@ export default {
     };
   },
   methods: {
-    // 发送消息给AI
     async sendMessageToAi() {
       try {
+        // 设置 waiting 为 true，表示正在处理消息
+        this.waiting = true;
         // 发送请求到 ChatGPT API
         const response = await fetch(this.APIWEB, {
           method: 'POST',
@@ -146,6 +147,9 @@ export default {
         // 处理错误
         console.error('消息发送失败:', error);
         throw error;
+      } finally {
+        // 设置 waiting 为 false，表示消息处理完成
+        this.waiting = false;
       }
     },
     //处理消息,接收的消息传入对话纪录数组
@@ -267,13 +271,19 @@ export default {
     },
     showAiMessage() {
       this.$message({
-        message: 'AI正在思考中...',
+        message: 'AI正在思考中',
+        // type: 'warning'
+      });
+    },
+    showPromptMessage() {
+      this.$message({
+        message: '正在初始化AI大模型',
         // type: 'warning'
       });
     },
     showRefershMessage() {
       this.$message({
-        message: '新对话已启用',
+        message: '新对话启用中',
         type: 'success'
       });
     },
@@ -289,6 +299,7 @@ export default {
       this.chatMessages.push({ role: 'system', content: prompt });
       this.sendChat = this.chatMessages.length > 6 ? [this.chatMessages[0]].concat(this.chatMessages.slice(-5)) : [...this.chatMessages];
       this.sendMessageToAi();
+      this.showPromptMessage();
     });
     // 设置聊天框高度
     this.setChatBoxHeight();

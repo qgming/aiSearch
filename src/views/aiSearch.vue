@@ -68,6 +68,8 @@ export default {
 
     async sendMessageToAi() {
       try {
+        // 设置 waiting 为 true，表示正在处理消息
+        this.waiting = true;
         // 发送请求到 ChatGPT API
         const response = await fetch(this.APIWEB, {
           method: 'POST',
@@ -134,6 +136,9 @@ export default {
         // 处理错误
         console.error('消息发送失败:', error);
         throw error;
+      } finally {
+        // 设置 waiting 为 false，表示消息处理完成
+        this.waiting = false;
       }
     },
 
@@ -186,8 +191,8 @@ export default {
       this.sendChat = this.chatMessages.length > 6 ? [this.chatMessages[0]].concat(this.chatMessages.slice(-5)) : [...this.chatMessages];
       this.inputText = '';
 
-      // console.log('历史记录');
-      // console.log(this.chatMessages);
+      console.log('历史记录');
+      console.log(this.chatMessages);
 
       try {
 
@@ -259,6 +264,12 @@ export default {
         // type: 'warning'
       });
     },
+    showPromptMessage() {
+      this.$message({
+        message: '正在初始化AI大模型',
+        // type: 'warning'
+      });
+    },
     showRefershMessage() {
       this.$message({
         message: '新对话已启用',
@@ -277,6 +288,7 @@ export default {
       this.chatMessages.push({ role: 'system', content: prompt });
       this.sendChat = this.chatMessages.length > 6 ? [this.chatMessages[0]].concat(this.chatMessages.slice(-5)) : [...this.chatMessages];
       this.sendMessageToAi();
+      this.showPromptMessage();
     });
     // 设置聊天框高度
     this.setChatBoxHeight();
@@ -294,10 +306,11 @@ export default {
         document.body.style.backgroundColor = this.backColor;
       }
     };
-    if (this.$route.query.q) {
-      this.inputText = this.$route.query.q
-      this.sendMessage()
-    };
+    //接收传递的消息
+    // if (this.$route.query.q) {
+    //   this.inputText = this.$route.query.q
+    //   this.sendMessage()
+    // };
 
   },
 
