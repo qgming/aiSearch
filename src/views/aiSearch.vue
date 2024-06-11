@@ -266,13 +266,13 @@ export default {
     },
     showPromptMessage() {
       this.$message({
-        message: '正在初始化AI大模型',
+        message: 'AI正在初始化...',
         // type: 'warning'
       });
     },
     showRefershMessage() {
       this.$message({
-        message: '新对话已启用',
+        message: 'AI正在重启中...',
         type: 'success'
       });
     },

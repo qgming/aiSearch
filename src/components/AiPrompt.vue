@@ -270,19 +270,19 @@ export default {
     },
     showAiMessage() {
       this.$message({
-        message: 'AI正在思考中',
+        message: 'AI正在思考中...',
         // type: 'warning'
       });
     },
     showPromptMessage() {
       this.$message({
-        message: '正在初始化AI大模型',
+        message: 'AI正在初始化...',
         // type: 'warning'
       });
     },
     showRefershMessage() {
       this.$message({
-        message: '新对话启用中',
+        message: 'AI正在重启中...',
         type: 'success'
       });
     },
