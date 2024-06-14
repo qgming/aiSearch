@@ -53,6 +53,7 @@ export default {
         { name: '开发者模式', any: '解开AI部分限制', location: '../prompt/developer.txt' },
         { name: '写作助理', any: '优化句子、文章的语法、清晰度和简洁度，提高可读性。', location: '../prompt/Writingassistant.txt' },
         { name: '小红书风格', any: '将文本改写成类似小红书的 Emoji 风格。', location: '../prompt/xiaohongshu.txt' },
+        { name: '小红书生成器', any: '根据一句话描述生成爆款小红书文章。', location: '../prompt/xhsplus.txt' },
         { name: 'AI画图提示词生成器', any: '描述图片详情，AI帮你补充详细信息', location: '../prompt/midjourney.txt' },
         { name: 'Nature风格润色', any: '将按照 Nature 风格润色，或者可以提供想要模仿的写作风格。', location: '../prompt/nature.txt' },
         { name: '论文专家', any: '根据主题撰写内容翔实、有信服力的论文。', location: '../prompt/lunwen1.txt' },
