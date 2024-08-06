@@ -20,7 +20,7 @@
           </div>
         </ol>
         <ol>
-          <div class="optionName">搜索引擎</div>
+          <div class="optionName">默认搜索</div>
           <el-select class="selectEngine" v-model="selectedEngine" placeholder="选择搜索引擎" size="large">
             <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.url" />
           </el-select>
@@ -38,7 +38,7 @@
           <el-input class="selectEngine" v-model="apiModel" placeholder="gpt-3.5-turbo" />
         </ol>
         <ol>
-          <div class="optionName">Polar Dimension 0.1.2</div>
+          <div class="optionName">Polar Dimension 0.2.0</div>
         </ol>
         <ol>
           <!-- <van-button class="saveButton" plain type="primary" v-on:click="saveButtonApi"
@@ -66,10 +66,12 @@ export default {
       selectedEngine: ref(null),// 添加到 data 函数中
       options: [
         { name: 'Google', url: 'https://www.google.com/search?q=' },
+        { name: '秘塔AI', url: 'https://metaso.cn/?q=' },
         { name: 'Bing', url: 'https://www.bing.com/search?q=' },
         { name: 'Baidu', url: 'https://www.baidu.com/s?wd=' },
-        { name: 'Polar AI', url: 'https://s.videolist.cn/ai?q=' },
-        { name: 'bilibili', url: 'https://search.bilibili.com/all?keyword=' },
+        { name: '哔哩哔哩', url: 'https://search.bilibili.com/all?keyword=' },
+        { name: '极点AI', url: 'https://s.videolist.cn/ai?q=' },
+
         // 添加更多搜索引擎选项
       ],
     };

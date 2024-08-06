@@ -10,9 +10,22 @@
         <div class="aSearch" @click="searchAi">
           <img src="../assets/icons/searchai.svg" alt="大模型搜索"><span>AI搜索</span>
         </div>
-        <div class="aSearch" @click="anyModel">
-          <img src="../assets/icons/searchai.svg" alt="大模型工具"><span>AI工具</span>
+        <div class="aSearch" @click="searchMetaso">
+          <img src="../assets/icons/searchai.svg" alt="秘塔AI"><span>秘塔AI</span>
         </div>
+        <div class="aSearch" @click="searchBing">
+          <img src="../assets/icons/search.svg" alt="必应"><span>必应</span>
+        </div>
+        <div class="aSearch" @click="searchGoogle">
+          <img src="../assets/icons/search.svg" alt="谷歌"><span>谷歌</span>
+        </div>
+        <div class="aSearch" @click="searchBaidu">
+          <img src="../assets/icons/search.svg" alt="百度"><span>百度</span>
+        </div>
+
+        <!-- <div class="aSearch" @click="anyModel">
+          <img src="../assets/icons/searchai.svg" alt="大模型工具"><span>AI工具</span>
+        </div> -->
       </div>
     </div>
   </transition>
@@ -50,6 +63,40 @@ export default {
       window.open(`/ai`, '_blank');
       // }
     },
+
+    //必应搜索
+    searchBing() {
+      if (this.searchText === '') {
+        this.showMessage();
+      } else {
+        window.open('https://www.bing.com/search?q=' + this.searchText);
+      }
+    },
+    //谷歌搜索
+    searchGoogle() {
+      if (this.searchText === '') {
+        this.showMessage();
+      } else {
+        window.open('https://www.google.com/search?q=' + this.searchText);
+      }
+    },
+    //百度搜索
+    searchBaidu() {
+      if (this.searchText === '') {
+        this.showMessage();
+      } else {
+        window.open('https://www.baidu.com/s?wd=' + this.searchText);
+      }
+    },
+    //秘塔AI搜索
+    searchMetaso() {
+      if (this.searchText === '') {
+        this.showMessage();
+      } else {
+        window.open("https://metaso.cn/?q=" + this.searchText);
+      }
+    },
+
     //去其他页面（临时
     anyModel() {
       window.open(`/any`, '_blank');
@@ -130,11 +177,11 @@ export default {
 .aSearch {
   display: flex;
   align-items: center;
-  padding: 2px;
+  padding: 1px;
   margin-left: 10px;
-  border: 1px solid #d9d9d9;
-  background-color: #d1d1d1;
-  border-radius: 9px;
+  border: 1px solid #cee1fc;
+  background-color: #ecf4ff;
+  border-radius: 8px;
 }
 
 .aSearch:hover {
@@ -143,13 +190,14 @@ export default {
 }
 
 .aSearch img {
-  width: 20px;
-  height: 20px;
-  margin: 5px 0px 5px 5px;
+  width: 15px;
+  height: 15px;
+  margin: 3px 0px 3px 3px;
 }
 
 .aSearch span {
-  margin: 5px;
+  font-size: 14px;
+  margin: 3px;
 }
 
 @media screen and (max-width: 768px) {
