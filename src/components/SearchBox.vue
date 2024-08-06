@@ -23,9 +23,9 @@
           <img src="../assets/icons/search.svg" alt="百度"><span>百度</span>
         </div>
 
-        <div class="aSearch" @click="anyModel">
+        <!-- <div class="aSearch" @click="anyModel">
           <img src="../assets/icons/searchai.svg" alt="大模型工具"><span>AI工具</span>
-        </div>
+        </div> -->
       </div>
     </div>
   </transition>
@@ -148,7 +148,7 @@ export default {
   border-radius: 12px;
   background-color: rgba(255, 255, 255, 0.9);
   /* backdrop-filter: blur(10px); */
-  padding: 10px;
+  padding: 8px;
   border: 1px solid rgba(245, 246, 247, 0.1);
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
@@ -178,7 +178,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 1px;
-  margin-left: 10px;
+  margin-left: 8px;
   border: 1px solid #cee1fc;
   background-color: #ecf4ff;
   border-radius: 8px;
@@ -215,13 +215,13 @@ export default {
   }
 
   .aSearch img {
-    width: 20px;
-    height: 20px;
-    margin: 2px 0px 2px 2px;
+    width: 12px;
+    height: 12px;
+    margin: 1px 0px 1px 1px;
   }
 
   .aSearch span {
-    margin: 2px;
+    margin: 1px;
   }
 
 }
