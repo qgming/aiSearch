@@ -89,18 +89,15 @@ export default {
       localStorage.setItem("apiModel", this.apiModel);
       localStorage.setItem("searchEngine", this.selectedEngine);
       localStorage.setItem("backColor", this.backColor);
-      // this.refreshPage()
-      // alert("保存成功!");
+      this.refreshPage();
+      this.showMessage;
     },
     //切换背景
     changeBackground(value) {
       if (value) {
-        // this.$refs.bgBox.style.backgroundImage = `url("https://bing.ee123.net/img/")`;
         document.body.style.backgroundImage = `url("https://bing.ee123.net/img/")`;
-        // document.body.backgroundSize = 'cover';
-        // document.body.backgroundPosition = 'center';
       } else {
-        document.body.backgroundColor = this.backColor;
+        document.body.style.backgroundColor = this.backColor;
       }
       localStorage.setItem('switchBack', JSON.stringify(value));
       // location.reload();
