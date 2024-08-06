@@ -23,9 +23,9 @@
           <img src="../assets/icons/search.svg" alt="百度"><span>百度</span>
         </div>
 
-        <!-- <div class="aSearch" @click="anyModel">
+        <div class="aSearch" @click="anyModel">
           <img src="../assets/icons/searchai.svg" alt="大模型工具"><span>AI工具</span>
-        </div> -->
+        </div>
       </div>
     </div>
   </transition>

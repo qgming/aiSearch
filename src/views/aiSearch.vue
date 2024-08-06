@@ -39,7 +39,6 @@ export default {
       APIWEB: localStorage.getItem("apiWebsite"),
       MODEL: localStorage.getItem('apiModel'),
       PROMPT: '../prompt/search.txt',
-      backColor: localStorage.getItem("backColor") || '#F9F9F9',
     };
   },
   methods: {
@@ -294,18 +293,6 @@ export default {
     this.setChatBoxHeight();
     // 添加窗口大小改变事件监听器
     window.addEventListener('resize', this.setChatBoxHeight);
-    //页面背景
-    const savedBack = localStorage.getItem('switchBack');
-    if (savedBack === null) {
-      document.body.style.backgroundColor = this.backColor;
-    } else {
-      if (savedBack === 'true') {
-        document.body.style.backgroundImage = `url("https://bing.ee123.net/img/")`;
-        document.body.style.backgroundSize = 'cover';
-      } else {
-        document.body.style.backgroundColor = this.backColor;
-      }
-    };
     //接收传递的消息
     // if (this.$route.query.q) {
     //   this.inputText = this.$route.query.q

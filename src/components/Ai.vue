@@ -1,10 +1,10 @@
 <template>
-  <div class="ai">
+  <div class="aitool">
     <AiPrompt />
     <SettingBox />
   </div>
 </template>
-
+<!-- AI工具箱 -->
 <script>
 import AiPrompt from './AiPrompt.vue'
 import SettingBox from './SettingBox.vue';

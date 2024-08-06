@@ -27,7 +27,7 @@ const routes = [
   },
   {
     path: "/any",
-    name: "AI",
+    name: "aiTool",
     component: Ai,
     children: {
       component: AiPrompt,

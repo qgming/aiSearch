@@ -38,7 +38,7 @@
           <el-input class="selectEngine" v-model="apiModel" placeholder="gpt-3.5-turbo" />
         </ol>
         <ol>
-          <div class="optionName">Polar Dimension 0.2.0</div>
+          <div class="optionName">Polar Dimension 0.2.1</div>
         </ol>
         <ol>
           <!-- <van-button class="saveButton" plain type="primary" v-on:click="saveButtonApi"
