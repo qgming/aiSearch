@@ -7,9 +7,9 @@
         <div class="aSearch" @click="search">
           <img src="../assets/icons/search.svg" alt="普通搜索"><span>搜索</span>
         </div>
-        <div class="aSearch" @click="searchAi">
+        <!-- <div class="aSearch" @click="searchAi">
           <img src="../assets/icons/searchai.svg" alt="大模型搜索"><span>AI搜索</span>
-        </div>
+        </div> -->
         <div class="aSearch" @click="searchMetaso">
           <img src="../assets/icons/searchai.svg" alt="秘塔AI"><span>秘塔AI</span>
         </div>
@@ -149,7 +149,7 @@ export default {
   background-color: rgba(255, 255, 255, 0.9);
   /* backdrop-filter: blur(10px); */
   padding: 8px;
-  border: 1px solid rgba(245, 246, 247, 0.1);
+  border: 1px solid rgba(245, 246, 247, 0.6);
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
