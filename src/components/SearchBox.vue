@@ -231,7 +231,7 @@ export default {
   }
 
   .searchBox.expanded {
-    height: 50px;
+    height: 60px;
   }
 
 
