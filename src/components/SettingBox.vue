@@ -1,114 +1,119 @@
 <template>
   <div class="setting">
+    <!-- 设置图标 -->
     <img class="settingImg" @click="toggleSettingBox" src="../assets/icons/setting.svg" alt="设置">
+    <!-- 设置面板 -->
     <div class="settingBox" v-if="showSettingBox">
-      <li>
-        <ol>
-          <!-- <van-cell-group>
-            <van-cell title="单元格" value="内容" />
-            <van-cell title="单元格" value="内容" label="描述信息" />
-          </van-cell-group> -->
-          <div class="option">
-            <div class="optionText">必应壁纸</div>
-            <el-switch v-model="savedBack" @change="changeBackground" @click="refreshPage" size="large" />
-          </div>
-        </ol>
-        <ol>
-          <div class="option">
-            <div class="optionText">背景颜色</div>
-            <el-color-picker v-model="backColor" />
-          </div>
-        </ol>
-        <ol>
+      <ul>
+        <!-- 必应壁纸开关 -->
+        <li class="option">
+          <span class="optionText">必应壁纸</span>
+          <el-switch v-model="savedBack" @change="changeBackground" size="large" />
+        </li>
+        <!-- 背景颜色选择器 -->
+        <li class="option">
+          <span class="optionText">背景颜色</span>
+          <el-color-picker v-model="backColor" @change="updateBackgroundColor" />
+        </li>
+        <!-- 默认搜索引擎选择 -->
+        <li>
           <div class="optionName">默认搜索</div>
           <el-select class="selectEngine" v-model="selectedEngine" placeholder="选择搜索引擎" size="large">
             <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.url" />
           </el-select>
-        </ol>
-        <ol>
+        </li>
+        <!-- API设置 -->
+        <li>
           <div class="optionName">APIKEY</div>
           <el-input class="selectEngine" v-model="apiKey" placeholder="sk-" />
-        </ol>
-        <ol>
+        </li>
+        <li>
           <div class="optionName">API网站</div>
           <el-input class="selectEngine" v-model="apiWebsite" placeholder="https://" />
-        </ol>
-        <ol>
+        </li>
+        <li>
           <div class="optionName">API模型</div>
           <el-input class="selectEngine" v-model="apiModel" placeholder="gpt-3.5-turbo" />
-        </ol>
-        <ol>
-          <div class="optionName">©️极点维度 V0.2.2</div>
-        </ol>
-        <ol>
-          <!-- <van-button class="saveButton" plain type="primary" v-on:click="saveButtonApi"
-            @click="showMessage">保存</van-button> -->
-          <el-button class="saveButton" type="primary" v-on:click="saveButtonApi" @click="showMessage"
-            plain>保存</el-button>
-        </ol>
-      </li>
+        </li>
+        <!-- 版本信息 -->
+        <li>
+          <div class="optionName">©️极点维度 V0.3.0</div>
+        </li>
+        <!-- 保存按钮 -->
+        <li>
+          <el-button class="saveButton" type="primary" @click="saveSettings" plain>保存</el-button>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue';
 export default {
   data() {
     return {
       showSettingBox: false,
-      searchUrl: '',
       apiKey: '',
       apiWebsite: '',
       apiModel: 'gpt-3.5-turbo',
       savedBack: false,
       backColor: '#f9f9f9',
-      selectedEngine: ref(null),// 添加到 data 函数中
+      selectedEngine: '',
       options: [
         { name: 'Google', url: 'https://www.google.com/search?q=' },
         { name: '百度', url: 'https://www.baidu.com/s?wd=' },
         { name: '哔哩哔哩', url: 'https://search.bilibili.com/all?keyword=' },
-        // { name: '极点AI', url: 'https://s.videolist.cn/ai?q=' },
         { name: '秘塔AI', url: 'https://metaso.cn/?q=' },
-        { name: '360AI', url: ' https://www.sou.com/search/?q=' },
+        { name: '360AI', url: 'https://www.sou.com/search/?q=' },
         { name: 'perplexity', url: 'https://www.perplexity.ai/?s=o&q=' },
         { name: 'Bing', url: 'https://www.bing.com/search?q=' },
-
-        // 添加更多搜索引擎选项
-
       ],
     };
   },
 
   methods: {
-    //设置页面显示与隐藏
+    // 切换设置面板的显示状态
     toggleSettingBox() {
       this.showSettingBox = !this.showSettingBox;
     },
-    //保存设置的数据
-    saveButtonApi() {
+
+    // 保存设置
+    saveSettings() {
       localStorage.setItem("apiKey", this.apiKey);
       localStorage.setItem("apiWebsite", this.apiWebsite);
       localStorage.setItem("apiModel", this.apiModel);
       localStorage.setItem("searchEngine", this.selectedEngine);
       localStorage.setItem("backColor", this.backColor);
+      localStorage.setItem('switchBack', JSON.stringify(this.savedBack));
+
+      this.showMessage();
       this.refreshPage();
-      this.showMessage;
     },
-    //切换背景
+
+    // 切换背景
     changeBackground(value) {
       if (value) {
         document.body.style.backgroundImage = `url("https://bing.ee123.net/img/")`;
+        document.body.style.backgroundColor = '';
       } else {
-        document.body.style.backgroundColor = this.backColor;
+        this.updateBackgroundColor(this.backColor);
       }
-      localStorage.setItem('switchBack', JSON.stringify(value));
-      // location.reload();
     },
-    //刷新页面
+
+    // 更新背景颜色
+    updateBackgroundColor(color) {
+      if (!this.savedBack) {
+        document.body.style.backgroundImage = '';
+        document.body.style.backgroundColor = color;
+      }
+    },
+
+    // 刷新页面
     refreshPage() {
       location.reload();
     },
+
+    // 显示保存成功消息
     showMessage() {
       this.$message({
         message: '保存成功！',
@@ -116,25 +121,21 @@ export default {
       });
     },
   },
+
   mounted() {
+    // 从本地存储加载设置
     this.apiKey = localStorage.getItem("apiKey") || '';
     this.apiWebsite = localStorage.getItem("apiWebsite") || '';
     this.apiModel = localStorage.getItem("apiModel") || 'gpt-3.5-turbo';
     this.backColor = localStorage.getItem("backColor") || '#f9f9f9';
-
-    // 从 localStorage 中获取保存的选定的搜索引擎的 URL
-    const searchEngine = localStorage.getItem("searchEngine");
-    if (searchEngine) {
-      this.selectedEngine = searchEngine
-    } else {
-      // 如果没有保存的值，则默认选中第一个搜索引擎
-      this.selectedEngine = this.options[4];
-    }
+    this.selectedEngine = localStorage.getItem("searchEngine") || this.options[4].url;
 
     const savedBack = localStorage.getItem('switchBack');
     if (savedBack !== null) {
       this.savedBack = JSON.parse(savedBack);
       this.changeBackground(this.savedBack);
+    } else {
+      this.updateBackgroundColor(this.backColor);
     }
   }
 };
@@ -148,11 +149,10 @@ export default {
   flex-direction: column;
   left: 10px;
   top: 10px;
-  background-color: white;
+  background-color: #ffffff;
   border-radius: 12px;
   padding: 3px;
-  /* border: 1px solid black; */
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .settingImg {
@@ -162,7 +162,10 @@ export default {
 }
 
 .settingBox {
+  background-color: #f8f9fa;
   border-radius: 12px;
+  padding: 10px;
+  color: var(--text-color);
 }
 
 .option {
@@ -171,34 +174,58 @@ export default {
   align-items: center;
   height: 38px;
   width: 280px;
+  margin-bottom: 10px;
 }
 
 .selectEngine {
   width: 280px;
-  /* border-radius: 16px; */
   height: 30px;
+  margin-bottom: 10px;
 }
 
 .optionText {
   font-size: 16px;
-}
-
-ol {
-  padding: 5px;
-  margin: 3px;
-  border-radius: 6px;
+  color: #343a40;
 }
 
 .optionName {
   font-size: 14px;
-  font-weight: 400;
-  margin-bottom: 5px;
+  font-weight: 500;
+  color: #495057;
+  margin: 5px 0;
 }
 
 .saveButton {
   height: 38px;
-  width: 280px;
+  width: 100%;
   border-radius: 6px;
-  font-size: 18px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.saveButton:hover {
+  background-color: #0056b3;
+}
+
+:root {
+  --primary-color: #007bff;
+  --text-color: #343a40;
+  --background-color: #f8f9fa;
+}
+
+.el-select,
+.el-input {
+  margin-bottom: 10px;
+}
+
+.el-switch__core {
+  background-color: #ced4da !important;
+}
+
+.el-switch.is-checked .el-switch__core {
+  background-color: var(--primary-color) !important;
 }
 </style>

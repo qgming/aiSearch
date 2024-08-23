@@ -1,24 +1,31 @@
 <template>
   <div class="chatContainer">
-    <div class="chatBox" ref="chatBox">
-      <!-- 对话历史 -->
-      <div v-for="message in messages" :key="message.id">
-        <div class="message">
-          <p class="sender">{{ message.role }}:</p>
-          <div v-html="parsedContent(message.content)"></div>
+    <main class="chatBox" ref="chatBox">
+      <!-- 遍历所有消息 -->
+      <div v-for="message in messages" :key="message.id" class="messageWrapper">
+        <!-- 根据消息角色设置不同的样式 -->
+        <div class="message" :class="{
+          'userMessage': message.role === 'You',
+          'aiMessage': message.role !== 'You'
+        }">
+          <!-- 显示消息内容 -->
+          <div class="messageContent" v-html="parsedContent(message.content)"></div>
         </div>
       </div>
-      <div v-if="waiting" class="thinkAi"><img class="loading" src="../assets/icons/loading.gif" alt=""></div>
-    </div>
-
-    <div class="inputBox">
-      <img class="refreshWeb" src="../assets/icons/shuaxin.svg" alt="刷新网站" @click="refreshPage">
-      <!-- <img class="anyModel" src="../assets/icons/searchai.svg" alt="更多模式" @click="anyModel"> -->
-      <!-- <el-input class="textInput" v-model="inputText" @keyup.enter="sendMessage" placeholder="输入问题..." /> -->
-      <input class="textInput" type="text" v-model="inputText" @keyup.enter="sendMessage" placeholder="输入问题...">
-      <button class="sendButton" @click="sendMessage">发送</button>
-    </div>
-    <div class="footerText">内容由 AI 大模型生成，请仔细甄别</div>
+      <div v-if="waiting" class="typingIndicator">
+        <span></span><span></span><span></span>
+      </div>
+    </main>
+    <footer class="inputArea">
+      <button class="iconButton refreshBtn" @click="refreshPage" title="刷新对话">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+      <input class="textInput" type="text" v-model="inputText" @keyup.enter="sendMessage" placeholder="输入您的问题..."
+        :disabled="waiting">
+      <button class="iconButton sendButton" @click="sendMessage" :disabled="!inputText.trim() || waiting">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </footer>
   </div>
 </template>
 
@@ -42,272 +49,194 @@ export default {
     };
   },
   methods: {
-    // // 发送消息给AI
-    // async sendMessageToAi() {
-    //   try {
-    //     const response = await axios.post(this.APIWEB, {
-    //       model: this.MODEL,
-    //       stream: true,
-    //       messages: this.sendChat
-    //       // messages: [{ role: 'user', content: message }],
-    //     }, {
-    //       headers: {
-    //         'Authorization': `Bearer ${this.APIKEY}`,
-    //         'Content-Type': 'application/json',
-    //       },
-    //     });
-    //     console.log(response);
-    //     return response.data;
-    //     // return response.data.choices[0].message;
-    //   } catch (error) {
-    //     console.error('消息发送失败:', error);
-    //     throw error;
-    //   }
-    // },
-
     async sendMessageToAi() {
       try {
-        // 设置 waiting 为 true，表示正在处理消息
         this.waiting = true;
-        // 发送请求到 ChatGPT API
-        const response = await fetch(this.APIWEB, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.APIKEY}` // 使用 Bearer 认证方式，APIKEY 是你的 OpenAI API 密钥
-          },
-          body: JSON.stringify({
-            model: this.MODEL, // 使用的模型，例如 'gpt-3.5-turbo'
-            stream: true, // 启用流式响应
-            messages: this.sendChat // 发送的消息数组
-          })
-        });
+        const response = await this.fetchAiResponse();
+        await this.handleStreamResponse(response);
+      } catch (error) {
+        console.error('发送消息失败:', error);
+        this.showMessage('发送消息失败。请重试。', 'error');
+      } finally {
+        this.waiting = false;
+      }
+    },
 
-        // 检查响应状态是否成功
-        if (!response.ok) {
-          throw new Error(`HTTP 错误! 状态码: ${response.status}`);
-        }
+    async fetchAiResponse() {
+      const response = await fetch(this.APIWEB, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.APIKEY}`
+        },
+        body: JSON.stringify({
+          model: this.MODEL,
+          stream: true,
+          messages: this.sendChat
+        })
+      });
 
-        // 创建一个读取器来读取响应流
-        const reader = response.body.getReader();
-        // 创建一个解码器来将二进制数据解码为字符串
-        let decoder = new TextDecoder();
-        // 存储解码后的数据
-        let resultData = '';
-        // 标志，用于在找到 [DONE] 后停止读取
-        let doneReading = false;
+      if (!response.ok) {
+        throw new Error(`HTTP 错误！状态: ${response.status}`);
+      }
 
-        // 持续读取响应流直到结束
-        while (!doneReading) {
-          // 读取响应流的下一块数据
-          const { done, value } = await reader.read();
-          // 如果已经读取完毕，则退出循环
-          if (done) break;
-          // 将读取到的数据解码并追加到 resultData 中
-          resultData += decoder.decode(value);
-          // 检查 resultData 中是否包含完整的 JSON 消息
-          while (resultData.includes('\n')) {
-            // 找到 JSON 消息的结束位置
-            const messageIndex = resultData.indexOf('\n');
-            // 提取完整的 JSON 消息
-            const message = resultData.slice(0, messageIndex);
-            // 更新 resultData 以移除已处理的消息
-            resultData = resultData.slice(messageIndex + 1);
-            // 检查消息是否以 'data: ' 开头
-            if (message.startsWith('data: ')) {
-              // 解析 JSON 消息
-              const jsonMessage = JSON.parse(message.substring(5));
-              // console.log(jsonMessage);
-              // 检查是否接收到结束消息
-              if (resultData.includes('[DONE]')) {
-                doneReading = true; // 设置标志为 true 以停止读取
-                break;
-              }
-              // 处理接收到的消息
-              const content = jsonMessage.choices[0]?.delta?.content || '';
-              // console.log(content);
-              // return content; // 返回接收到的消息内容
-              this.handleReceivedMessage({ content });
+      return response;
+    },
+
+    // 处理流式响应
+    async handleStreamResponse(response) {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+
+        for (let i = 0; i < lines.length - 1; i++) {
+          const line = lines[i].trim();
+          if (line.startsWith('data: ')) {
+            const jsonData = line.slice(5);
+            if (jsonData === '[DONE]') return;
+
+            try {
+              const parsedData = JSON.parse(jsonData);
+              const content = parsedData.choices[0]?.delta?.content || '';
+              this.handleReceivedMessage(content);
+            } catch (e) {
+              console.error('JSON 解析错误:', e);
             }
           }
         }
-      } catch (error) {
-        // 处理错误
-        console.error('消息发送失败:', error);
-        throw error;
-      } finally {
-        // 设置 waiting 为 false，表示消息处理完成
-        this.waiting = false;
+        buffer = lines[lines.length - 1];
       }
     },
 
+    // 处理接收到的消息
+    handleReceivedMessage(content) {
+      const lastMessage = this.messages[this.messages.length - 1];
+      const lastChatMessage = this.chatMessages[this.chatMessages.length - 1];
 
-    //处理消息,接收的消息传入对话纪录数组
-    handleReceivedMessage(message) {
-      // console.log(message);
-      // 检查最后一个消息的角色
-      if (this.messages.length > 0) {
-        if (this.messages[this.messages.length - 1].role === '极点AI') {
-          // 如果最后一条消息是AI的，则将新消息追加到现有消息中
-          this.messages[this.messages.length - 1].content += message.content;
-        } else {
-          // 否则，创建一个新的消息
-          this.messages.push({ role: '极点AI', content: message.content });
-        }
-      }
-
-      // 将消息同时添加到chatMessages中
-      if (this.chatMessages.length > 0 && this.chatMessages[this.chatMessages.length - 1].role === 'assistant') {
-        // 如果最后一条消息是assistant的，则将新消息追加到现有消息中
-        this.chatMessages[this.chatMessages.length - 1].content += message.content;
+      if (lastMessage && lastMessage.role === '极点AI') {
+        lastMessage.content += content;
       } else {
-        // 否则，创建一个新的消息
-        this.chatMessages.push({ role: 'assistant', content: message.content });
+        this.messages.push({ role: '极点AI', content });
+      }
+
+      if (lastChatMessage && lastChatMessage.role === 'assistant') {
+        lastChatMessage.content += content;
+      } else {
+        this.chatMessages.push({ role: 'assistant', content });
       }
     },
 
-    //用户发送消息
     async sendMessage() {
-      if (this.waiting) {
-        //AI正在思考中
-        this.showAiMessage()
-        return;
-      }
-      this.waiting = true;
+      if (this.isInputInvalid()) return;
 
-      let message = this.inputText.trim();
-      if (!message) {
-        //请输入内容
-        this.showMessage()
-        this.waiting = false;
-        return;
-      }
-      //把消息加载到遍历数组
-      this.messages.push({ role: 'You', content: message });
-      //把消息加载到历史纪录
-      this.chatMessages.push({ role: 'user', content: message });
-      //把历史纪录转化为对话数组
-      this.sendChat = this.chatMessages.length > 6 ? [this.chatMessages[0]].concat(this.chatMessages.slice(-5)) : [...this.chatMessages];
-      this.inputText = '';
-
-      // console.log('历史记录');
-      // console.log(this.chatMessages);
+      const message = this.inputText.trim();
+      this.addMessageToChat(message);
+      this.prepareMessageForAi();
+      this.clearInput();
 
       try {
-
-        //不再等待完整的响应
         await this.sendMessageToAi();
-        // const responseMessage = await this.sendMessageToAi();
-        // console.log(responseMessage);
-        // this.handleReceivedMessage({ responseMessage });
       } catch (error) {
-        console.error('消息发送失败！:', error);
-      } finally {
-        this.waiting = false;
+        console.error('发送消息失败:', error);
       }
     },
-    //读取本地Prompt
+
+    isInputInvalid() {
+      if (this.waiting) {
+        this.showMessage('AI 正在思考中...', 'info');
+        return true;
+      }
+
+      if (!this.inputText.trim()) {
+        this.showMessage('请输入问题！', 'warning');
+        return true;
+      }
+
+      return false;
+    },
+
+    addMessageToChat(message) {
+      this.messages.push({ role: 'You', content: message });
+      this.chatMessages.push({ role: 'user', content: message });
+    },
+
+    prepareMessageForAi() {
+      this.sendChat = this.chatMessages.length > 6 ?
+        [this.chatMessages[0], ...this.chatMessages.slice(-5)] :
+        [...this.chatMessages];
+    },
+
+    clearInput() {
+      this.inputText = '';
+    },
+
+    // 读取提示词文件
     async readPromptFile() {
       try {
-        //根据变量变化初始提示词
-        const response = await axios.get(this.PROMPT, {
-          responseType: 'text' // 指定响应类型为文本
-        });
-        // const response = await axios.get('../prompt/search.txt', {
-        //   responseType: 'text' // 指定响应类型为文本
-        // });
+        const response = await axios.get(this.PROMPT, { responseType: 'text' });
         return response.data;
       } catch (error) {
-        console.error('prompt读取失败！:', error);
+        console.error('读取提示词失败:', error);
+        this.showMessage('读取提示词失败，请检查文件路径', 'error');
         return null;
       }
     },
-    //刷新页面
-    refreshPage() {
+
+    // 刷新页面，重新开始对话
+    async refreshPage() {
       this.messages = [];
       this.chatMessages = [];
       this.sendChat = [];
-      //发送prompt
-      this.readPromptFile().then(prompt => {
+      const prompt = await this.readPromptFile();
+      if (prompt) {
         this.chatMessages.push({ role: 'system', content: prompt });
-        this.sendChat = this.chatMessages.length > 6 ? [this.chatMessages[0]].concat(this.chatMessages.slice(-5)) : [...this.chatMessages];
-        this.sendMessageToAi();
-      });
-      this.showRefershMessage()
-      // window.location.reload();
+        this.sendChat = [...this.chatMessages];
+        await this.sendMessageToAi();
+      }
+      this.showMessage('AI 正在重新启动...', 'success');
     },
-    //修改高度
-    setChatBoxHeight() {
-      let screenHeight = window.innerHeight;
-      this.$refs.chatBox.style.height = `${screenHeight - 130}px`;
-    },
-    //让消息支持markdown
+
+    // 解析markdown内容
     parsedContent(content) {
       marked.setOptions({
-        highlight: function (code) {
-          return hljs.highlightAuto(code).value;
-        }
+        highlight: (code) => hljs.highlightAuto(code).value
       });
       return marked(content);
     },
-    //弹出消息
-    showMessage() {
+
+    // 显示消息提示
+    showMessage(message, type = 'warning') {
       this.$message({
-        message: '请先输入问题！',
-        type: 'warning'
+        message,
+        type
       });
     },
-    showAiMessage() {
-      this.$message({
-        message: 'AI正在思考中...',
-        // type: 'warning'
-      });
-    },
-    showPromptMessage() {
-      this.$message({
-        message: 'AI正在初始化...',
-        // type: 'warning'
-      });
-    },
-    showRefershMessage() {
-      this.$message({
-        message: 'AI正在重启中...',
-        type: 'success'
-      });
-    },
-    //去其他页面（临时
-    anyModel() {
-      window.open(`/any`, '_blank');
+
+    // 获取当前时间
+    getCurrentTime() {
+      return new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
     },
   },
 
-  mounted() {
-    //发送prompt
-    this.readPromptFile().then(prompt => {
-      this.chatMessages.push({ role: 'system', content: prompt });
-      this.sendChat = this.chatMessages.length > 6 ? [this.chatMessages[0]].concat(this.chatMessages.slice(-5)) : [...this.chatMessages];
-      this.sendMessageToAi();
-      this.showPromptMessage();
-    });
-    // 设置聊天框高度
-    this.setChatBoxHeight();
-    // 添加窗口大小改变事件监听器
-    window.addEventListener('resize', this.setChatBoxHeight);
-    //接收传递的消息
-    // if (this.$route.query.q) {
-    //   this.inputText = this.$route.query.q
-    //   this.sendMessage()
-    // };
-
+  async mounted() {
+    if (this.$route.query.message) {
+      const prompt = await this.readPromptFile();
+      if (prompt) {
+        this.chatMessages.push({ role: 'system', content: prompt });
+        this.chatMessages.push({ role: 'user', content: this.$route.query.message });
+        this.sendChat = [...this.chatMessages];
+        await this.sendMessageToAi();
+        this.showMessage('AI 正在初始化并处理您的问题...', 'info');
+      }
+    }
   },
-
-  beforeDestroy() {
-    // 在组件销毁前移除事件监听器
-    window.removeEventListener('resize', this.setChatBoxHeight);
-  },
-
-
-
 };
 </script>
 
@@ -315,153 +244,188 @@ export default {
 .chatContainer {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  margin: 20px;
-  border: 1px solid #f1f2f3;
-  border-radius: 16px;
-  padding: 20px 20px 5px 20px;
-  background-color: white;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f4f5fa;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .chatBox {
-  overflow-y: scroll;
-  /* padding-bottom: 20px; */
-}
-
-/* 伪元素隐藏滑动条 */
-.chatBox::-webkit-scrollbar {
-  display: none;
-}
-
-.thinkAi {
-  text-align: center;
-}
-
-.loading {
-  width: 50px;
-}
-
-/* 问题输入框 */
-.inputBox {
-  width: 600px;
-  height: 42px;
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+  margin: 0 auto;
+  max-width: 100vw;
+  width: 50%;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  border: 1px solid #cccccc;
-  border-radius: 12px;
-  background-color: white;
-  padding: 6px;
-  /* box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px; */
+  flex-direction: column;
+  box-sizing: border-box;
 }
-
-.refreshWeb {
-  width: 26px;
-  height: 26px;
-  padding: 6px;
-  border: 1px solid #f5f6f7;
-  background-color: #f1f2f3;
-  border-radius: 9px;
-}
-
-.refreshWeb:hover {
-  background-color: #f9f9f9;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-}
-
-.anyModel {
-  width: 26px;
-  height: 26px;
-  padding: 6px;
-  margin-left: 5px;
-  border: 1px solid #f5f6f7;
-  background-color: #f1f2f3;
-  border-radius: 9px;
-}
-
-.anyModel:hover {
-  background-color: #f9f9f9;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-}
-
-
-.textInput {
-  width: 500px;
-  height: 40px;
-  padding: 8px;
-  border-radius: 9px;
-  border: 1px solid #f5f6f7;
-  margin: 0px 6px 0px 6px;
-  outline: none;
-}
-
-.textInput:hover {
-  border: 1px solid #f9f9f9;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-}
-
-.sendButton {
-  width: 80px;
-  height: 40px;
-  padding: 5px;
-  border-radius: 9px;
-  border: 1px solid #f5f6f7;
-  background-color: #f1f2f3;
-  /* font-size: 16px; */
-  font-weight: 500;
-}
-
-.sendButton:hover {
-  background-color: #f9f9f9;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-}
-
-.footerText {
-  height: 15px;
-  line-height: 15px;
-  text-align: center;
-  color: #c1c2c3;
-  font-size: 12px;
-}
-
-/* 对话内容 */
 
 .message {
-  width: 500px;
-  margin: 2px 0 10px 2px;
-  border: 1px solid #f1f2f3;
-  background-color: white;
-  border-radius: 9px;
-  padding: 10px;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  max-width: 70%;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-.sender {
-  font-weight: bold;
+.userMessage {
+  align-self: flex-end;
+  background-color: #3498db;
+  color: white;
+  margin-left: 30%;
+}
+
+.aiMessage {
+  align-self: flex-start;
+  background-color: #ffffff;
+  color: #333;
+  margin-right: 30%;
+}
+
+.typingIndicator {
+  align-self: flex-start;
+  display: flex;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.typingIndicator span {
+  height: 0.5rem;
+  width: 0.5rem;
+  margin: 0 0.1rem;
+  background-color: #3498db;
+  display: block;
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: typing 1s infinite;
+}
+
+@keyframes typing {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-0.5rem);
+  }
+}
+
+.inputArea {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  margin: 0 auto;
+  max-width: 50rem;
+  width: 100%;
+  background-color: #ffffff;
+  margin-bottom: 1rem;
+  border-radius: 1rem;
+  position: sticky;
+  bottom: 0;
+  box-sizing: border-box;
+}
+
+.iconButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: #3498db;
+  transition: opacity 0.3s, transform 0.3s;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.iconButton:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+.iconButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.textInput {
+  flex-grow: 1;
+  margin: 0 1rem;
+  padding: 1rem 1.5rem;
+  border: 2px solid #e5e5e5;
+  border-radius: 2rem;
+  font-size: 1rem;
+  background-color: #ffffff;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.textInput:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.textInput:disabled {
+  background-color: #f5f7fa;
+  cursor: not-allowed;
 }
 
 @media screen and (max-width: 768px) {
+
   .chatContainer {
-    width: 370px;
-    padding: 5px;
-    margin: 5px;
+    height: 100vh;
   }
 
-  .inputBox {
-    width: 350px;
-    padding: 5px;
+  .chatBox {
+    padding: 1rem;
+    width: 100%;
   }
 
   .message {
-    width: 300px;
+    max-width: 85%;
+    padding: 0.75rem 1rem;
   }
 
-  .footerText {
-    height: 12px;
-    line-height: 12px;
-    font-size: 10px;
+  .userMessage {
+    margin-left: 15%;
   }
 
+  .aiMessage {
+    margin-right: 15%;
+  }
+
+  .inputArea {
+    max-width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 0;
+    border-radius: 0;
+  }
+
+  .textInput {
+    margin: 0 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .iconButton {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+
+
+  .typingIndicator {
+    padding: 1rem;
+  }
 }
 </style>
