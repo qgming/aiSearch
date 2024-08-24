@@ -37,7 +37,7 @@
         </li>
         <!-- 版本信息 -->
         <li>
-          <div class="optionName">©️极点维度 V0.3.0</div>
+          <div class="optionName">©️极点维度 V0.3.1</div>
         </li>
         <!-- 保存按钮 -->
         <li>
@@ -128,7 +128,7 @@ export default {
     this.apiWebsite = localStorage.getItem("apiWebsite") || '';
     this.apiModel = localStorage.getItem("apiModel") || 'gpt-3.5-turbo';
     this.backColor = localStorage.getItem("backColor") || '#f9f9f9';
-    this.selectedEngine = localStorage.getItem("searchEngine") || this.options[4].url;
+    this.selectedEngine = localStorage.getItem("searchEngine") || this.options[6].url;
 
     const savedBack = localStorage.getItem('switchBack');
     if (savedBack !== null) {
