@@ -155,7 +155,8 @@ export default {
 .searchBox:hover {
   border: 1px solid rgba(180, 180, 180, 0.5);
   box-shadow: rgba(0, 0, 0, 0.1) 0px 6px 16px 0px;
-  transform: translateY(-2px);
+  transform: translateY(-2px)scale(1.01);
+  transition: all 0.3s ease;
 }
 
 .searchInput {

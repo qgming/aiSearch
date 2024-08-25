@@ -10,46 +10,16 @@ body {
   align-items: center;
   background-size: cover;
   background-position: center;
-  /* transition: background-size 1.3s ease, filter 0.3s ease; */
-  /* background-color: #f9f9f9;
-  background-image: url("https://bing.ee123.net/img/"); */
+  background-repeat: no-repeat;
 }
 
 body.focused {
-  background-size: 110%; 
-  backdrop-filter: blur(10px);
-  transition: backdrop-filter 0.2s ease;
+  background-size: cover;
+  backdrop-filter: blur(13px); /* 增加模糊半径以实现更优雅的效果 */
+  transition: background-size 0.5s ease, backdrop-filter 0.5s ease;
+  background-repeat: no-repeat;
 }
-
-/* 
-.footer {
-  position: absolute;
-  bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #f9f9f9;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-}
-
-.developer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 12px;
-  font-weight: 400;
-}
-
-.apiTxt {
-  font-size: 13px;
-  font-weight: 500;
-} */
-
 
 /* 响应式设计 */
 @media screen and (max-width: 768px) {
-  /* body {
-    background-image: url("https://bing.ee123.net/img/?w=768x1280");
-  } */
-
 }
