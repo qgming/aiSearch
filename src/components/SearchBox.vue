@@ -172,7 +172,7 @@ export default {
 }
 
 .searchInput:focus {
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
 
 .expanded .searchInput {
@@ -231,7 +231,7 @@ export default {
   }
 
   .searchBox.expanded {
-    height: 70px;
+    height: 65px;
   }
 
 

@@ -37,7 +37,7 @@
         </li>
         <!-- 版本信息 -->
         <li>
-          <div class="optionName">©️极点维度 V0.3.2</div>
+          <div class="optionName">©️极点维度 V0.3.3</div>
         </li>
         <!-- 保存按钮 -->
         <li>
@@ -159,6 +159,11 @@ export default {
   margin: 3px;
   width: 30px;
   height: 30px;
+  transition: transform 0.2s ease;
+}
+
+.settingImg:hover {
+  transform: scale(1.1);
 }
 
 .settingBox {
