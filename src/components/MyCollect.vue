@@ -109,6 +109,8 @@ export default {
     },
     // 保存编辑项
     saveEditItem() {
+      console.log(this.editingItem);
+
       // 更新收藏列表中的项
       this.collectList[index] = { ...this.editingItem };
 
