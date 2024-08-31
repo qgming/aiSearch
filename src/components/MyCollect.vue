@@ -109,12 +109,14 @@ export default {
     },
     // 保存编辑项
     saveEditItem() {
-
       // 找到当前编辑项的索引
       const index = this.collectList.findIndex(item => item.id === this.editingItem.id);
 
       // 更新收藏列表中的项
-      this.collectList[index] = { ...this.editingItem };
+      this.collectList[index] = {
+        ...this.editingItem,
+        logo: `https://api.iowen.cn/favicon/${this.editingItem.url.replace(/^https?:\/\//, '')}.png`
+      };
 
       // 更新本地存储
       localStorage.setItem('collectList', JSON.stringify(this.collectList));
