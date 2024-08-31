@@ -109,7 +109,9 @@ export default {
     },
     // 保存编辑项
     saveEditItem() {
-      console.log(this.editingItem);
+
+      // 找到当前编辑项的索引
+      const index = this.collectList.findIndex(item => item.id === this.editingItem.id);
 
       // 更新收藏列表中的项
       this.collectList[index] = { ...this.editingItem };
