@@ -10,6 +10,11 @@
           <span class="optionText">必应壁纸</span>
           <el-switch v-model="savedBack" @change="changeBackground" size="large" />
         </li>
+        <!-- 网站捷径开关 -->
+        <li class="option">
+          <span class="optionText">网站捷径</span>
+          <el-switch v-model="savedCollect" @change="changeCollect" size="large" />
+        </li>
         <!-- 背景颜色选择器 -->
         <li class="option">
           <span class="optionText">背景颜色</span>
@@ -37,7 +42,7 @@
         </li>
         <!-- 版本信息 -->
         <li>
-          <div class="optionName">©️极点维度 V0.3.4</div>
+          <div class="optionName">©️极点维度 V0.4.0</div>
         </li>
         <!-- 保存按钮 -->
         <li>
@@ -57,6 +62,7 @@ export default {
       apiWebsite: '',
       apiModel: 'gpt-3.5-turbo',
       savedBack: false,
+      savedCollect: false,
       backColor: '#f9f9f9',
       selectedEngine: '',
       options: [
@@ -85,6 +91,7 @@ export default {
       localStorage.setItem("searchEngine", this.selectedEngine);
       localStorage.setItem("backColor", this.backColor);
       localStorage.setItem('switchBack', JSON.stringify(this.savedBack));
+      localStorage.setItem('switchCollect', JSON.stringify(this.savedCollect));
 
       this.showMessage();
       this.refreshPage();
@@ -98,6 +105,8 @@ export default {
       } else {
         this.updateBackgroundColor(this.backColor);
       }
+      // 更新本地存储的值
+      localStorage.setItem('switchBack', JSON.stringify(value));
     },
 
     // 更新背景颜色
@@ -106,6 +115,17 @@ export default {
         document.body.style.backgroundImage = '';
         document.body.style.backgroundColor = color;
       }
+    },
+
+    // 切换网站捷径
+    changeCollect(value) {
+      if (value) {
+        this.savedCollect = true;
+      } else {
+        this.savedCollect = false;
+      }
+      // 更新本地存储的值
+      localStorage.setItem('switchCollect', JSON.stringify(value));
     },
 
     // 刷新页面
@@ -130,13 +150,25 @@ export default {
     this.backColor = localStorage.getItem("backColor") || '#f9f9f9';
     this.selectedEngine = localStorage.getItem("searchEngine") || this.options[6].url;
 
+    // 检查并设置必应壁纸和网站捷径的初始值
     const savedBack = localStorage.getItem('switchBack');
     if (savedBack !== null) {
       this.savedBack = JSON.parse(savedBack);
-      this.changeBackground(this.savedBack);
     } else {
-      this.updateBackgroundColor(this.backColor);
+      this.savedBack = true; // 第一次设置为 true
+      localStorage.setItem('switchBack', JSON.stringify(this.savedBack));
     }
+
+    const savedCollect = localStorage.getItem('switchCollect');
+    if (savedCollect !== null) {
+      this.savedCollect = JSON.parse(savedCollect);
+    } else {
+      this.savedCollect = true; // 第一次设置为 true
+      localStorage.setItem('switchCollect', JSON.stringify(this.savedCollect));
+    }
+
+    this.changeBackground(this.savedBack);
+    this.updateBackgroundColor(this.backColor);
   }
 };
 </script>
@@ -155,15 +187,17 @@ export default {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
+
 .settingImg {
   margin: 3px;
   width: 30px;
   height: 30px;
   transition: transform 0.2s ease;
+  user-select: none;
 }
 
 .settingImg:hover {
-  transform: scale(1.1);
+  transform: scale(1.03);
 }
 
 .settingBox {
@@ -191,6 +225,7 @@ export default {
 .optionText {
   font-size: 16px;
   color: #343a40;
+  user-select: none;
 }
 
 .optionName {

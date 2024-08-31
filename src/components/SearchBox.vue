@@ -139,7 +139,8 @@ export default {
   display: flex;
   flex-direction: column;
   border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.98);
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
   padding: 8px;
   border: 1px solid rgba(200, 200, 200, 0.3);
   box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 12px 0px;
@@ -155,7 +156,7 @@ export default {
 .searchBox:hover {
   border: 1px solid rgba(180, 180, 180, 0.5);
   box-shadow: rgba(0, 0, 0, 0.1) 0px 6px 16px 0px;
-  transform: translateY(-2px)scale(1.01);
+  transform: translateY(-1px)scale(1.01);
   transition: all 0.3s ease;
 }
 
@@ -183,6 +184,7 @@ export default {
 .searchOption {
   display: flex;
   flex-direction: row-reverse;
+  user-select: none;
   /* padding: 1px; */
 }
 
