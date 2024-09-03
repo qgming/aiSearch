@@ -72,7 +72,8 @@ export default {
         { id: 2, title: 'GitHub', url: 'https://www.github.com', logo: 'https://api.iowen.cn/favicon/www.github.com.png' },
         { id: 3, title: '哔哩哔哩', url: 'https://www.bilibili.com', logo: 'https://api.iowen.cn/favicon/www.bilibili.com.png' },
         { id: 4, title: 'Kimi', url: 'https://kimi.moonshot.cn', logo: 'https://api.iowen.cn/favicon/kimi.moonshot.cn.png' },
-        { id: 5, title: '知乎', url: 'https://www.zhihu.com', logo: 'https://api.iowen.cn/favicon/www.zhihu.com.png' },
+        { id: 5, title: '今日热榜', url: 'https://rebang.today', logo: 'https://api.iowen.cn/favicon/rebang.today.png' },
+        { id: 6, title: '智能体', url: 'https://www.jdwdai.com', logo: 'https://api.iowen.cn/favicon/www.jdwdai.com.png' },
       ];
       this.collectList = initialList; // 将初始列表赋值给 collectList
       localStorage.setItem('collectList', JSON.stringify(initialList)); // 保存到本地存储
