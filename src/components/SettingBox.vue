@@ -28,6 +28,10 @@
           </el-select>
         </li>
         <!-- API设置 -->
+        <li class="option">
+          <span class="optionText">API自定义</span>
+          <el-switch v-model="savedCollect" @change="changeCollect" size="large" />
+        </li>
         <li>
           <div class="optionName">APIKEY</div>
           <el-input class="selectEngine" v-model="apiKey" placeholder="sk-" />
@@ -42,7 +46,7 @@
         </li>
         <!-- 版本信息 -->
         <li>
-          <div class="optionName">©️极点维度 V0.4.3</div>
+          <div class="optionName">©️极点维度 V0.5.0</div>
         </li>
         <!-- 保存按钮 -->
         <li>

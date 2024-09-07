@@ -49,9 +49,15 @@ export default {
       allMessages: [{ role: 'system', content: '' }], // 包含系统消息的完整消息列表
       inputText: '', // 用户输入的文本
       waiting: false, // 是否正在等待 AI 回复
-      API_KEY: localStorage.getItem("apiKey"),
-      ENDPOINT: localStorage.getItem("apiWebsite"),
-      MODEL_NAME: localStorage.getItem('apiModel'),
+      // API_KEY: localStorage.getItem("apiKey"),
+      // ENDPOINT: localStorage.getItem("apiWebsite"),
+      // MODEL_NAME: localStorage.getItem('apiModel'),
+
+      // 硅基流动API
+      API_KEY: 'sk-cknwcfvxfuaemvbgfpcjhececitxulqcjbderqufacsdlrqh',
+      ENDPOINT: 'https://api.siliconflow.cn/v1/chat/completions',
+      MODEL_NAME: 'Qwen/Qwen2-7B-Instruct',
+
       PROMPT: '../prompt/search.txt', // 系统提示词文件路径
     };
   },
