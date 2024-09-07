@@ -35,20 +35,20 @@
         <ul class="customApi" v-if="customApi">
         <li>
           <div class="optionName">APIKEY</div>
-          <el-input class="selectEngine" v-model="apiKey" placeholder="sk-" />
+          <el-input class="customApiOption" v-model="apiKey" placeholder="sk-" />
         </li>
         <li>
           <div class="optionName">API网站</div>
-          <el-input class="selectEngine" v-model="apiWebsite" placeholder="https://" />
+          <el-input class="customApiOption" v-model="apiWebsite" placeholder="https://api.openai.com/v1/chat/completions" />
         </li>
         <li>
           <div class="optionName">API模型</div>
-          <el-input class="selectEngine" v-model="apiModel" placeholder="gpt-3.5-turbo" />
+          <el-input class="customApiOption" v-model="apiModel" placeholder="gpt-3.5-turbo" />
         </li>
         </ul>
         <!-- 版本信息 -->
         <li>
-          <div class="optionName">©️极点维度 V0.5.1</div>
+          <div class="optionName">©️极点维度 V0.5.2</div>
         </li>
         <!-- 保存按钮 -->
         <li>
@@ -66,7 +66,7 @@ export default {
       showSettingBox: false,
       apiKey: '',
       apiWebsite: '',
-      apiModel: 'gpt-3.5-turbo',
+      apiModel: '',
       savedBack: false,
       savedCollect: false,
       customApi: false,
@@ -160,8 +160,8 @@ export default {
   mounted() {
     // 从本地存储加载设置
     this.apiKey = localStorage.getItem("apiKey") || '';
-    this.apiWebsite = localStorage.getItem("apiWebsite") || '';
-    this.apiModel = localStorage.getItem("apiModel") || 'gpt-3.5-turbo';
+    this.apiWebsite = localStorage.getItem("apiWebsite") || 'https://api.openai.com/v1/chat/completions';
+    this.apiModel = localStorage.getItem("apiModel") || 'gpt-4o';
     this.backColor = localStorage.getItem("backColor") || '#f9f9f9';
     this.selectedEngine = localStorage.getItem("searchEngine") || this.options[6].url;
     //自定义API开关
@@ -224,7 +224,6 @@ export default {
 }
 
 .settingBox {
-  background-color: #f8f9fa;
   border-radius: 12px;
   padding: 10px;
   color: var(--text-color);
@@ -256,10 +255,18 @@ export default {
   font-weight: 500;
   color: #495057;
   margin: 5px 0;
+  user-select: none;
 }
 .customApi {
-  border-top: 1px solid #afaeae;
-  padding-top: 10px;
+  border-radius: 12px;
+  padding: 10px;
+  background-color: #f5f6f7;
+}
+
+.customApiOption{
+  width: 260px;
+  height: 30px;
+  margin-bottom: 5px;
 }
 
 .saveButton {
@@ -283,16 +290,4 @@ export default {
   --background-color: #f8f9fa;
 }
 
-.el-select,
-.el-input {
-  margin-bottom: 10px;
-}
-
-.el-switch__core {
-  background-color: #ced4da !important;
-}
-
-.el-switch.is-checked .el-switch__core {
-  background-color: var(--primary-color) !important;
-}
 </style>
