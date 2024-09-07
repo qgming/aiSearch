@@ -2,7 +2,7 @@
 
 在线地址 https://s.jdwdai.com
 
-一个浏览器搜索页项目，集成支持自定义大模型的AI搜索
+一个支持必应壁纸，支持AI大模型的浏览器搜索页。
 
 This template should help get you started developing with Vue 3 in Vite.
 
