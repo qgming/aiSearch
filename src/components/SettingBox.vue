@@ -29,9 +29,10 @@
         </li>
         <!-- API设置 -->
         <li class="option">
-          <span class="optionText">API自定义</span>
-          <el-switch v-model="savedCollect" @change="changeCollect" size="large" />
+          <span class="optionText">自定义大模型</span>
+          <el-switch v-model="customApi" @change="changeApi" size="large" />
         </li>
+        <ul class="customApi" v-if="customApi">
         <li>
           <div class="optionName">APIKEY</div>
           <el-input class="selectEngine" v-model="apiKey" placeholder="sk-" />
@@ -44,9 +45,10 @@
           <div class="optionName">API模型</div>
           <el-input class="selectEngine" v-model="apiModel" placeholder="gpt-3.5-turbo" />
         </li>
+        </ul>
         <!-- 版本信息 -->
         <li>
-          <div class="optionName">©️极点维度 V0.5.0</div>
+          <div class="optionName">©️极点维度 V0.5.1</div>
         </li>
         <!-- 保存按钮 -->
         <li>
@@ -67,6 +69,7 @@ export default {
       apiModel: 'gpt-3.5-turbo',
       savedBack: false,
       savedCollect: false,
+      customApi: false,
       backColor: '#f9f9f9',
       selectedEngine: '',
       options: [
@@ -96,6 +99,7 @@ export default {
       localStorage.setItem("backColor", this.backColor);
       localStorage.setItem('switchBack', JSON.stringify(this.savedBack));
       localStorage.setItem('switchCollect', JSON.stringify(this.savedCollect));
+      localStorage.setItem('switchApi', JSON.stringify(this.customApi));
 
       this.showMessage();
       this.refreshPage();
@@ -132,6 +136,13 @@ export default {
       localStorage.setItem('switchCollect', JSON.stringify(value));
     },
 
+    //自定义API界面
+    changeApi(value){
+      this.customApi = !!value;
+      // 更新本地存储的值
+      localStorage.setItem('switchApi', JSON.stringify(value));
+    },
+
     // 刷新页面
     refreshPage() {
       location.reload();
@@ -153,8 +164,15 @@ export default {
     this.apiModel = localStorage.getItem("apiModel") || 'gpt-3.5-turbo';
     this.backColor = localStorage.getItem("backColor") || '#f9f9f9';
     this.selectedEngine = localStorage.getItem("searchEngine") || this.options[6].url;
-
-    // 检查并设置必应壁纸和网站捷径的初始值
+    //自定义API开关
+    const customApi = localStorage.getItem("switchApi")
+    if (customApi !== null) {
+      this.customApi = JSON.parse(customApi);
+    } else {
+      this.customApi = false; // 第一次设置为 true
+      localStorage.setItem('switchApi', JSON.stringify(this.customApi));
+    }
+    // 检查并设置必应壁纸的初始值
     const savedBack = localStorage.getItem('switchBack');
     if (savedBack !== null) {
       this.savedBack = JSON.parse(savedBack);
@@ -162,7 +180,7 @@ export default {
       this.savedBack = true; // 第一次设置为 true
       localStorage.setItem('switchBack', JSON.stringify(this.savedBack));
     }
-
+    // 检查并设置网站捷径的初始值
     const savedCollect = localStorage.getItem('switchCollect');
     if (savedCollect !== null) {
       this.savedCollect = JSON.parse(savedCollect);
@@ -171,6 +189,7 @@ export default {
       localStorage.setItem('switchCollect', JSON.stringify(this.savedCollect));
     }
 
+    this.changeApi(this.customApi)
     this.changeBackground(this.savedBack);
     this.updateBackgroundColor(this.backColor);
   }
@@ -238,20 +257,24 @@ export default {
   color: #495057;
   margin: 5px 0;
 }
+.customApi {
+  border-top: 1px solid #afaeae;
+  padding-top: 10px;
+}
 
 .saveButton {
   height: 38px;
   width: 100%;
   border-radius: 6px;
   font-size: 16px;
-  background-color: #007bff;
+  background-color: #409efe;
   color: #ffffff;
   border: none;
   transition: background-color 0.3s ease;
 }
 
 .saveButton:hover {
-  background-color: #0056b3;
+  background-color: #1d82ed;
 }
 
 :root {

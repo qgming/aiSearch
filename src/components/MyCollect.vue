@@ -298,7 +298,7 @@ export default {
   padding: 5px;
   border: 0;
   border-radius: 4px;
-  background-color: #007aff;
+  background-color: #409efe;
   /* 按钮背景色变为天蓝色 */
   color: #fff;
   /* 文字颜色变为白色 */
@@ -375,7 +375,7 @@ export default {
   padding: 5px;
   border: 0;
   border-radius: 4px;
-  background-color: #007aff;
+  background-color: #409efe;
   color: #fff;
   transition: background-color 0.3s ease-in-out;
   user-select: none;
