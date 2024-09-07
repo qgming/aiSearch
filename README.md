@@ -1,4 +1,8 @@
-# Polar AI 极点 AI
+# 极点搜索 aiSearch
+
+在线地址 https://s.jdwdai.com
+
+一个浏览器搜索页项目，集成支持自定义大模型的AI搜索
 
 This template should help get you started developing with Vue 3 in Vite.
 
