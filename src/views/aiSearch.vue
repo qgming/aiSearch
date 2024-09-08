@@ -58,7 +58,7 @@ export default {
       ENDPOINT: 'https://api.siliconflow.cn/v1/chat/completions',
       MODEL_NAME: 'Qwen/Qwen2-7B-Instruct',
 
-      PROMPT: '../prompt/search.txt', // 系统提示词文件路径
+      PROMPT: '../prompt/all.txt', // 系统提示词文件路径
     };
   },
   methods: {
