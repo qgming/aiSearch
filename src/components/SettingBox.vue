@@ -48,7 +48,7 @@
         </ul>
         <!-- 版本信息 -->
         <li>
-          <div class="optionName">©️极点维度 V0.5.4(1)</div>
+          <div class="optionName">©️极点维度 V0.5.4(2)</div>
         </li>
         <!-- 保存按钮 -->
         <li>
