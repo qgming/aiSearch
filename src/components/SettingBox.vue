@@ -55,7 +55,7 @@
           <el-button class="saveButton" type="primary" @click="saveSettings" plain>保存</el-button>
         </li>
         <li>
-          <div class="otherName">由硅基流动提供默认大模型支持<br>通义千问（Qwen2-7B-Instruct）</div>
+          <div class="otherName">由<a href="https://siliconflow.cn/zh-cn/" target="_blank">硅基流动</a>提供默认大模型支持<br>通义千问（Qwen2-7B-Instruct）</div>
         </li>
       </ul>
     </div>
