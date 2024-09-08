@@ -180,14 +180,14 @@ export default {
 
     // 检查 API 设置
     checkApiSwitch() {
-      const apiSwitch = localStorage.getItem('apiSwitch');
-      if (apiSwitch === 'true') {
-        const userKey = localStorage.getItem('userKey');
-        const userUrl = localStorage.getItem('userUrl');
-        const userModel = localStorage.getItem('userModel');
+      const switchApi = localStorage.getItem('switchApi');
+      if (switchApi === 'true') {
+        const userKey = localStorage.getItem('apiKey');
+        const userUrl = localStorage.getItem('apiWebsite');
+        const userModel = localStorage.getItem('apiModel');
 
         if (!userKey || !userUrl || !userModel) {
-          this.showMessage('API自定义失败，请检查', 'error');
+          this.showMessage('API自定义失败，已启用默认大模型', 'error');
         } else {
           this.API_KEY = userKey;
           this.ENDPOINT = userUrl;

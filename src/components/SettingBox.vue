@@ -48,11 +48,14 @@
         </ul>
         <!-- 版本信息 -->
         <li>
-          <div class="optionName">©️极点维度 V0.5.3</div>
+          <div class="optionName">©️极点维度 V0.5.4</div>
         </li>
         <!-- 保存按钮 -->
         <li>
           <el-button class="saveButton" type="primary" @click="saveSettings" plain>保存</el-button>
+        </li>
+        <li>
+          <div class="otherName">由硅基流动提供默认大模型支持<br>通义千问（Qwen2-7B-Instruct）</div>
         </li>
       </ul>
     </div>
@@ -169,7 +172,7 @@ export default {
     if (customApi !== null) {
       this.customApi = JSON.parse(customApi);
     } else {
-      this.customApi = false; // 第一次设置为 true
+      this.customApi = false; // 第一次设置为 false
       localStorage.setItem('switchApi', JSON.stringify(this.customApi));
     }
     // 检查并设置必应壁纸的初始值
@@ -256,6 +259,17 @@ export default {
   color: #495057;
   margin: 5px 0;
   user-select: none;
+}
+
+.otherName {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #495057;
+  user-select: none;
+  border-radius: 12px;
+  padding: 10px;
+  background-color: #f5f6f7;
 }
 .customApi {
   border-radius: 12px;
