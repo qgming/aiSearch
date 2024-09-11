@@ -393,6 +393,7 @@ export default {
   .collect-item-content {
     width: 40px;
     height: 40px;
+    margin: 5px;
   }
 
   .collect-item-content img {

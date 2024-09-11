@@ -72,7 +72,7 @@
         </div>
         <!-- 版本信息 -->
         <div>
-          <div class="optionName">©️极点维度 V0.6.0(5)</div>
+          <div class="optionName">©️极点维度 V0.6.0(6)</div>
         </div>
       </div>
     </div>

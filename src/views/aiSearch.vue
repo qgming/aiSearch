@@ -18,6 +18,7 @@
       </div>
     </main>
     <!-- 用户输入区域 -->
+    <p class="warnText">内容由AI生成，请注意甄别</p>
     <footer class="inputArea">
       <!-- 刷新对话按钮 -->
       <button class="iconButton refreshBtn" @click="refreshPage" title="刷新对话">
@@ -58,7 +59,7 @@ export default {
       ENDPOINT: 'https://api.siliconflow.cn/v1/chat/completions',
       MODEL_NAME: 'Qwen/Qwen2-7B-Instruct',
 
-      PROMPT: '../prompt/all.txt', // 系统提示词文件路径
+      PROMPT: '../prompt/search.txt', // 系统提示词文件路径
     };
   },
   methods: {
@@ -291,6 +292,13 @@ export default {
   border-radius: 50%;
   opacity: 0.4;
   animation: typing 1s infinite;
+}
+
+.warnText {
+  text-align: center;
+  color: gray;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 @keyframes typing {
