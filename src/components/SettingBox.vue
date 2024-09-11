@@ -72,7 +72,7 @@
         </div>
         <!-- 版本信息 -->
         <div>
-          <div class="optionName">©️极点维度 V0.6.0(6)</div>
+          <div class="optionName">©️极点维度 V0.6.1(6)</div>
         </div>
       </div>
     </div>
@@ -103,13 +103,13 @@ export default {
         { name: 'Bing', url: 'https://www.bing.com/search?q=' },
       ],
       localPhoto: [
-        { name: '图片1', id: 1, url: '../background/background1.jpg' },
-        { name: '图片2', id: 2, url: '../background/background2.jpg' },
-        { name: '图片3', id: 3, url: '../background/background3.jpg' },
-        { name: '图片4', id: 4, url: '../background/background4.jpg' },
-        { name: '图片5', id: 5, url: '../background/background5.jpg' },
+        { name: '图片1', id: 1, url: '../background/bg1.webp' },
+        { name: '图片2', id: 2, url: '../background/bg2.webp' },
+        { name: '图片3', id: 3, url: '../background/bg3.webp' },
+        { name: '图片4', id: 4, url: '../background/bg4.webp' },
+        { name: '图片5', id: 5, url: '../background/bg5.webp' },
       ],
-      aLocalPhoto: '../background/background1.jpg',
+      aLocalPhoto: '../background/bg1.webp',
     };
   },
 
