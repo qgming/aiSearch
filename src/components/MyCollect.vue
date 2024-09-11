@@ -404,6 +404,7 @@ export default {
   .add-collect-item {
     width: 40px;
     height: 40px;
+    margin: 5px;
     line-height: 40px;
     font-size: 30px;
   }
