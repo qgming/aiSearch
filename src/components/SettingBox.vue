@@ -4,60 +4,77 @@
     <img class="settingImg" @click="toggleSettingBox" src="../assets/icons/setting.svg" alt="设置">
     <!-- 设置面板 -->
     <div class="settingBox" v-if="showSettingBox">
-      <ul>
+      <div>
         <!-- 必应壁纸开关 -->
-        <li class="option">
+        <div class="option">
           <span class="optionText">必应壁纸</span>
           <el-switch v-model="savedBack" @change="changeBackground" size="large" />
-        </li>
+        </div>
+        <!-- 精选壁纸开关 -->
+        <div class="option">
+          <span class="optionText">本地壁纸</span>
+          <el-switch v-model="localBackground" @change="changeLocalBackground" size="large" />
+        </div>
+        <!-- 本地壁纸选择 -->
+        <div class="localBackground" v-if="localBackground">
+          <div class="allPhoto" v-for="item in localPhoto" @click="changeLocalPhoto(item.url)">
+            <img class="photoList" :src="item.url" alt="background" />
+          </div>
+          <div class="allPhoto" @click="selectLocalPhoto">
+            <div class="photoList">+</div>
+          </div>
+        </div>
         <!-- 网站捷径开关 -->
-        <li class="option">
+        <div class="option">
           <span class="optionText">网站捷径</span>
           <el-switch v-model="savedCollect" @change="changeCollect" size="large" />
-        </li>
+        </div>
         <!-- 背景颜色选择器 -->
-        <li class="option">
+        <div class="option">
           <span class="optionText">背景颜色</span>
           <el-color-picker v-model="backColor" @change="updateBackgroundColor" />
-        </li>
+        </div>
         <!-- 默认搜索引擎选择 -->
-        <li>
-          <div class="optionName">默认搜索</div>
+        <div>
+          <div class="optionText">默认引擎</div>
           <el-select class="selectEngine" v-model="selectedEngine" placeholder="选择搜索引擎" size="large">
             <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.url" />
           </el-select>
-        </li>
+        </div>
         <!-- API设置 -->
-        <li class="option">
+        <div class="option">
           <span class="optionText">自定义大模型</span>
           <el-switch v-model="customApi" @change="changeApi" size="large" />
-        </li>
-        <ul class="customApi" v-if="customApi">
-        <li>
-          <div class="optionName">APIKEY</div>
-          <el-input class="customApiOption" v-model="apiKey" placeholder="sk-" />
-        </li>
-        <li>
-          <div class="optionName">API网站</div>
-          <el-input class="customApiOption" v-model="apiWebsite" placeholder="https://api.openai.com/v1/chat/completions" />
-        </li>
-        <li>
-          <div class="optionName">API模型</div>
-          <el-input class="customApiOption" v-model="apiModel" placeholder="gpt-3.5-turbo" />
-        </li>
-        </ul>
-        <!-- 版本信息 -->
-        <li>
-          <div class="optionName">©️极点维度 V0.5.4(4)</div>
-        </li>
+        </div>
+        <div class="customApi" v-if="customApi">
+          <div>
+            <div class="optionName">APIKEY</div>
+            <el-input class="customApiOption" v-model="apiKey" placeholder="sk-" />
+          </div>
+          <div>
+            <div class="optionName">API网站</div>
+            <el-input class="customApiOption" v-model="apiWebsite"
+              placeholder="https://api.openai.com/v1/chat/completions" />
+          </div>
+          <div>
+            <div class="optionName">API模型</div>
+            <el-input class="customApiOption" v-model="apiModel" placeholder="gpt-3.5-turbo" />
+          </div>
+        </div>
+
         <!-- 保存按钮 -->
-        <li>
+        <div>
           <el-button class="saveButton" type="primary" @click="saveSettings" plain>保存</el-button>
-        </li>
-        <li>
-          <div class="otherName">由<a href="https://siliconflow.cn/zh-cn/" target="_blank">硅基流动</a>提供默认大模型支持<br>通义千问（Qwen2-7B-Instruct）</div>
-        </li>
-      </ul>
+        </div>
+        <div>
+          <div class="otherName">由<a href="https://siliconflow.cn/zh-cn/"
+              target="_blank">硅基流动</a>提供默认大模型支持<br>通义千问（Qwen2-7B-Instruct）</div>
+        </div>
+        <!-- 版本信息 -->
+        <div>
+          <div class="optionName">©️极点维度 V0.6.0(5)</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -71,6 +88,7 @@ export default {
       apiWebsite: '',
       apiModel: '',
       savedBack: false,
+      localBackground: false,
       savedCollect: false,
       customApi: false,
       backColor: '#f9f9f9',
@@ -84,6 +102,14 @@ export default {
         { name: 'perplexity', url: 'https://www.perplexity.ai/?s=o&q=' },
         { name: 'Bing', url: 'https://www.bing.com/search?q=' },
       ],
+      localPhoto: [
+        { name: '图片1', id: 1, url: '../background/background1.jpg' },
+        { name: '图片2', id: 2, url: '../background/background2.jpg' },
+        { name: '图片3', id: 3, url: '../background/background3.jpg' },
+        { name: '图片4', id: 4, url: '../background/background4.jpg' },
+        { name: '图片5', id: 5, url: '../background/background5.jpg' },
+      ],
+      aLocalPhoto: '../background/background1.jpg',
     };
   },
 
@@ -103,21 +129,63 @@ export default {
       localStorage.setItem('switchBack', JSON.stringify(this.savedBack));
       localStorage.setItem('switchCollect', JSON.stringify(this.savedCollect));
       localStorage.setItem('switchApi', JSON.stringify(this.customApi));
+      localStorage.setItem('switchLocalBackground', JSON.stringify(this.localBackground));
 
       this.showMessage();
       this.refreshPage();
     },
 
-    // 切换背景
+    // 开关必应壁纸
     changeBackground(value) {
       if (value) {
         document.body.style.backgroundImage = `url("https://bing.ee123.net/img/")`;
         document.body.style.backgroundColor = '';
+        this.localBackground = false; // 关闭本地壁纸
       } else {
         this.updateBackgroundColor(this.backColor);
       }
       // 更新本地存储的值
       localStorage.setItem('switchBack', JSON.stringify(value));
+    },
+
+
+    // 开关本地壁纸
+    changeLocalBackground(value) {
+      if (value) {
+        document.body.style.backgroundImage = `url(${this.aLocalPhoto})`;
+        document.body.style.backgroundColor = '';
+        this.savedBack = false; // 关闭必应壁纸
+      } else {
+        this.updateBackgroundColor(this.backColor);
+      }
+      // 更新本地存储的值
+      localStorage.setItem('switchLocalBackground', JSON.stringify(value));
+    },
+
+    // 更改本地壁纸
+    changeLocalPhoto(photo) {
+      // 更新本地存储的值
+      localStorage.setItem('localPhoto', JSON.stringify(photo));
+      if (this.localBackground) {
+        document.body.style.backgroundImage = `url(${photo})`;
+      }
+    },
+    //选择电脑本地图片
+    selectLocalPhoto() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.changeLocalPhoto(e.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+      input.click();
     },
 
     // 更新背景颜色
@@ -128,7 +196,7 @@ export default {
       }
     },
 
-    // 切换网站捷径
+    // 开关网站捷径
     changeCollect(value) {
       if (value) {
         this.savedCollect = true;
@@ -140,7 +208,7 @@ export default {
     },
 
     //自定义API界面
-    changeApi(value){
+    changeApi(value) {
       this.customApi = !!value;
       // 更新本地存储的值
       localStorage.setItem('switchApi', JSON.stringify(value));
@@ -167,6 +235,7 @@ export default {
     this.apiModel = localStorage.getItem("apiModel") || 'gpt-4o';
     this.backColor = localStorage.getItem("backColor") || '#f9f9f9';
     this.selectedEngine = localStorage.getItem("searchEngine") || this.options[6].url;
+
     //自定义API开关
     const customApi = localStorage.getItem("switchApi")
     if (customApi !== null) {
@@ -183,6 +252,7 @@ export default {
       this.savedBack = true; // 第一次设置为 true
       localStorage.setItem('switchBack', JSON.stringify(this.savedBack));
     }
+
     // 检查并设置网站捷径的初始值
     const savedCollect = localStorage.getItem('switchCollect');
     if (savedCollect !== null) {
@@ -192,9 +262,33 @@ export default {
       localStorage.setItem('switchCollect', JSON.stringify(this.savedCollect));
     }
 
-    this.changeApi(this.customApi)
+    // 检查并设置本地壁纸的初始值
+    const localBackground = localStorage.getItem('switchLocalBackground');
+    if (localBackground !== null) {
+      this.localBackground = JSON.parse(localBackground);
+    } else {
+      this.localBackground = false; // 第一次设置为 false
+      localStorage.setItem('switchLocalBackground', JSON.stringify(this.localBackground));
+    }
+
+    // 从本地存储加载本地壁纸
+    const localPhoto = localStorage.getItem('localPhoto');
+    if (localPhoto !== null) {
+      this.aLocalPhoto = JSON.parse(localPhoto);
+    }
+
+    // 确保本地壁纸和必应壁纸不同时开启
+    if (this.localBackground) {
+      this.changeLocalBackground(this.localBackground);
+    } else {
+      this.changeBackground(this.savedBack);
+    }
+
+
+    this.changeApi(this.customApi);
     this.changeBackground(this.savedBack);
     this.updateBackgroundColor(this.backColor);
+    this.changeLocalBackground(this.localBackground);
   }
 };
 </script>
@@ -228,7 +322,7 @@ export default {
 
 .settingBox {
   border-radius: 12px;
-  padding: 10px;
+  padding: 0 0 0 10px;
   color: var(--text-color);
 }
 
@@ -236,15 +330,13 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 38px;
-  width: 280px;
-  margin-bottom: 10px;
+  width: 290px;
 }
 
 .selectEngine {
-  width: 280px;
+  width: 290px;
   height: 30px;
-  margin-bottom: 10px;
+  margin: 10px 0;
 }
 
 .optionText {
@@ -254,40 +346,65 @@ export default {
 }
 
 .optionName {
-  font-size: 14px;
+  width: 290px;
+  font-size: 13px;
   font-weight: 500;
-  color: #495057;
-  margin: 5px 0;
+  color: #343a40;
+  margin: 5px;
   user-select: none;
 }
 
-.otherName {
-  margin-top: 10px;
-  font-size: 13px;
-  font-weight: 400;
-  color: #495057;
-  user-select: none;
+.localBackground {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   border-radius: 12px;
   padding: 10px;
-  background-color: #f5f6f7;
+  background-color: #eee;
+  width: 270px;
 }
+
+.allPhoto {
+  display: flex;
+  padding: 3px;
+
+}
+
+.photoList {
+  width: 80px;
+  height: 45px;
+  border-radius: 9px;
+  border: 2px solid white;
+  transition: all 0.3s;
+  text-align: center;
+  line-height: 45px;
+  font-size: 40px;
+  color: white;
+}
+
+.photoList:hover {
+  transform: scale(1.08);
+}
+
 .customApi {
   border-radius: 12px;
   padding: 10px;
-  background-color: #f5f6f7;
+  width: 270px;
+  background-color: #eeeeee;
 }
 
-.customApiOption{
-  width: 260px;
-  height: 30px;
-  margin-bottom: 5px;
+.customApiOption {
+  width: 270px;
+  height: 25px;
+  margin-bottom: 2px;
 }
 
 .saveButton {
-  height: 38px;
-  width: 100%;
+  height: 36px;
+  width: 290px;
   border-radius: 6px;
   font-size: 16px;
+  margin-top: 10px;
   background-color: #409efe;
   color: #ffffff;
   border: none;
@@ -298,10 +415,21 @@ export default {
   background-color: #1d82ed;
 }
 
+.otherName {
+  width: 270px;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #495057;
+  user-select: none;
+  border-radius: 12px;
+  padding: 10px;
+  background-color: #eee;
+}
+
 :root {
   --primary-color: #007bff;
   --text-color: #343a40;
   --background-color: #f8f9fa;
 }
-
 </style>
